@@ -18,7 +18,8 @@ export const getSupabase = () => {
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('Supabase environment variables (SUPABASE_URL, SUPABASE_ANON_KEY) are not set.');
   }
-  return createClient(supabaseUrl, supabaseAnonKey, {
+  const sanitizedUrl = supabaseUrl.replace(/\/rest\/v1\/?$/, '').trim();
+  return createClient(sanitizedUrl, supabaseAnonKey, {
     auth: {
       persistSession: false
     }
