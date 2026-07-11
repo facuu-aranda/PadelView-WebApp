@@ -1,0 +1,384 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="PadelView - Sportivo Belgrano">
+  <div class="landing-container">
+    {/* Header */}
+    <header class="web-header">
+      <div class="logo">
+        <div class="logo-icon">PV</div>
+        <div class="logo-text">
+          <h1>PadelView</h1>
+          <span>Sportivo Belgrano</span>
+        </div>
+      </div>
+    </header>
+
+    {/* Hero Section */}
+    <main class="hero-section">
+      <div class="hero-content">
+        <span class="pill-badge">NUEVO SERVICIO</span>
+        <h1>Reviví tus partidos y compartí tus mejores jugadas</h1>
+        <p class="hero-description">
+          Grabación automática en alta definición de tus partidos de pádel en el club. Descargá, compartí y analizá tus jugadas fácilmente.
+        </p>
+
+        {/* Match Search Box */}
+        <div class="search-card">
+          <h3>¿Tenés el código de tu partido?</h3>
+          <p class="search-hint">Ingresá el identificador único (UUID) enviado a tu WhatsApp para acceder al video.</p>
+          
+          <form class="search-form" id="search-form">
+            <input 
+              type="text" 
+              id="match-id-input"
+              placeholder="Ej. e29e92a8-f542-4911-b0db-bcf616cc3fdf" 
+              required
+              pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+              title="Debe ser un identificador UUID válido"
+            />
+            <button type="submit" class="btn btn-primary">
+              Ver Partido
+            </button>
+          </form>
+          <div id="error-message" class="error-msg hidden">Por favor ingresa un código de partido válido.</div>
+        </div>
+      </div>
+
+      {/* Feature grid */}
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎥</div>
+          <h3>Cámaras HD en Vivo</h3>
+          <p>Grabamos tus partidos directamente desde el ángulo óptimo de la cancha sin interrupciones.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Listos en Minutos</h3>
+          <p>Al finalizar tu turno, el video se procesa e importa a la nube automáticamente de forma súper rápida.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📲</div>
+          <h3>Compartí con un Clic</h3>
+          <p>Recibí el enlace en tu celular para descargarlo o reproducirlo directamente desde cualquier dispositivo móvil.</p>
+        </div>
+      </div>
+    </main>
+
+    {/* Footer */}
+    <footer class="web-footer">
+      <p>© {new Date().getFullYear()} PadelView. Desarrollado para Club Sportivo Belgrano.</p>
+    </footer>
+  </div>
+</Layout>
+
+<script is:inline>
+  // Handle redirect to match details on form submit
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('search-form');
+    const input = document.getElementById('match-id-input');
+    const errorMsg = document.getElementById('error-message');
+
+    if (form && input) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const rawValue = input.value.trim();
+        
+        // Simple UUID regex validation
+        const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+        
+        if (uuidRegex.test(rawValue)) {
+          errorMsg?.classList.add('hidden');
+          window.location.href = `/partido/${rawValue}`;
+        } else {
+          errorMsg?.classList.remove('hidden');
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  .landing-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at top left, #12213a 0%, #07090f 70%);
+    color: #f8fafc;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .web-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  }
+
+  .logo-text h1 {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .logo-text span {
+    font-size: 12px;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-section {
+    flex-grow: 1;
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    text-align: center;
+  }
+
+  .hero-content {
+    max-width: 700px;
+  }
+
+  .pill-badge {
+    background-color: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    margin-bottom: 18px;
+  }
+
+  .hero-content h1 {
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-description {
+    font-size: 17px;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  /* Search Box */
+  .search-card {
+    background-color: rgba(22, 29, 49, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 32px;
+    text-align: left;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(16px);
+  }
+
+  .search-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .search-hint {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 20px;
+  }
+
+  .search-form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+  }
+
+  .search-form input {
+    background-color: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 14px;
+    color: #fff;
+    width: 100%;
+    min-width: 0; /* Prevents overflow in grid/flex */
+    text-overflow: ellipsis;
+    transition: all 0.2s;
+  }
+
+  .search-form input:focus {
+    border-color: #10b981;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+  }
+
+  .error-msg {
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  /* Feature Grid */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+  }
+
+  .feature-card {
+    background-color: rgba(22, 29, 49, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 18px;
+    padding: 24px;
+    text-align: left;
+    transition: all 0.2s;
+  }
+
+  .feature-card:hover {
+    background-color: rgba(22, 29, 49, 0.45);
+    border-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .feature-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .feature-card p {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.5;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background-color: #10b981;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  }
+
+  .btn-primary:hover {
+    background-color: #059669;
+  }
+
+  .web-footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 13px;
+    color: #64748b;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: rgba(11, 15, 25, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    .web-header {
+      padding: 16px 20px;
+    }
+
+    .hero-section {
+      padding: 30px 16px;
+      gap: 32px;
+    }
+
+    .hero-content h1 {
+      font-size: 28px;
+    }
+
+    .search-form {
+      grid-template-columns: 1fr;
+    }
+
+    .feature-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .search-card {
+      padding: 24px 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-content h1 {
+      font-size: 24px;
+    }
+
+    .hero-description {
+      font-size: 15px;
+    }
+
+    .search-card h3 {
+      font-size: 16px;
+    }
+
+    .search-hint {
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+
+    .search-form input {
+      padding: 12px 14px;
+      font-size: 13px;
+    }
+  }
+</style>
