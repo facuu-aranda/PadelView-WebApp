@@ -22,8 +22,7 @@ import { ui } from '../i18n/es';
   <header class="site-header" id="top">
     <div class="header-inner">
       <a href="/" class="logo-link" aria-label="ViewPadel inicio">
-        <!-- Changed to img tag to prevent 7.5MB SVG parsing block -->
-        <img src="/asereje-gradient.min.svg" alt="ViewPadel" class="logo-img glow-effect" />
+        <img src="/View-padel.png" alt="ViewPadel" class="logo-img glow-effect" />
         <span class="logo-text">ViewPadel</span>
       </a>
       <nav class="desktop-nav" aria-label="Navegación principal">
@@ -110,7 +109,7 @@ import { ui } from '../i18n/es';
 
               <!-- Header bar -->
               <div class="iphone-app-header">
-                <img src="/asereje-gradient.min.svg" alt="VP" class="app-logo-small glow-effect" />
+                <img src="/View-padel.png" alt="VP" class="app-logo-small glow-effect" />
                 <span class="app-title">ViewPadel</span>
                 <svg class="app-share" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
               </div>
@@ -368,7 +367,7 @@ import { ui } from '../i18n/es';
                 </div>
               </div>
               <div class="showcase-screen-content">
-                <img src="/asereje-gradient.min.svg" alt="VP" class="ssc-logo glow-effect" />
+                <img src="/View-padel.png" alt="VP" class="ssc-logo glow-effect" />
                 <div class="ssc-label">{ui.showcase.screenStatusReady}</div>
                 <div class="ssc-video-thumb">
                   <svg viewBox="0 0 200 110" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; border-radius:10px;">
@@ -534,7 +533,7 @@ import { ui } from '../i18n/es';
   <!-- ═══════════════ CTA FINAL ══════════════════════════════════════════════ -->
   <section class="cta-final" id="soporte">
     <div class="cta-final-inner reveal-up">
-      <img src="/asereje-gradient.min.svg" alt="VP" class="cta-logo-large glow-effect" />
+      <img src="/View-padel.png" alt="VP" class="cta-logo-large glow-effect" />
       <div class="section-label" style="color:var(--cyan);">{ui.cta.label}</div>
       <h2 class="cta-h2">{ui.cta.title1}<br/><span class="gradient-text">{ui.cta.titleHighlight}</span></h2>
       <p class="cta-body">{ui.cta.body}</p>
@@ -553,7 +552,7 @@ import { ui } from '../i18n/es';
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <img src="/asereje-gradient.min.svg" alt="VP" class="logo-img sm glow-effect" />
+        <img src="/View-padel.png" alt="VP" class="logo-img sm glow-effect" />
         <span class="logo-text sm">ViewPadel</span>
       </div>
       <p class="footer-copy">© {new Date().getFullYear()} ViewPadel · {ui.footer.copy}</p>
@@ -631,12 +630,109 @@ import { ui } from '../i18n/es';
     }, { passive: true });
   }
 
+  // ── Bouncing Ball ───────────────────────────────────────────────────────
+  function initBouncingBall() {
+    if (window.innerWidth < 768) return;
+    
+    var ballSize = 24;
+    var numTrails = 12;
+    var speedOriginal = 4;
+    var speed = speedOriginal;
+
+    var wrapper = document.createElement('div');
+    wrapper.className = 'padel-bounce-wrapper';
+    var visual = document.createElement('div');
+    visual.className = 'padel-bounce-visual';
+    wrapper.appendChild(visual);
+    
+    var trails = [];
+    for (var i = 0; i < numTrails; i++) {
+      var t = document.createElement('div');
+      t.className = 'padel-bounce-trail';
+      document.body.appendChild(t);
+      trails.push({ el: t });
+    }
+    document.body.appendChild(wrapper);
+
+    var x = Math.random() * (window.innerWidth - ballSize);
+    var y = Math.random() * (window.innerHeight - ballSize);
+    var angle = Math.random() * Math.PI * 2;
+    var vx = Math.cos(angle) * speed;
+    var vy = Math.sin(angle) * speed;
+    var history = [];
+
+    function update() {
+      x += vx;
+      y += vy;
+
+      var maxX = document.documentElement.scrollWidth - ballSize;
+      var maxY = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight) - ballSize;
+
+      if (x <= 0) { x = 0; vx *= -1; }
+      if (x >= maxX) { x = maxX; vx *= -1; }
+      if (y <= 0) { y = 0; vy *= -1; }
+      if (y >= maxY) { y = maxY; vy *= -1; }
+
+      var scrollY = window.scrollY;
+
+      var renderX = x - window.scrollX;
+      var renderY = y - window.scrollY;
+      wrapper.style.transform = 'translate3d(' + renderX + 'px, ' + renderY + 'px, 0)';
+
+      history.unshift({ x: x, y: y });
+      if (history.length > numTrails) history.pop();
+
+      for (var i = 0; i < trails.length; i++) {
+        var pos = history[i] || history[history.length - 1] || { x: x, y: y };
+        var scale = 1 - (i / numTrails);
+        var opacity = 0.6 * (1 - (i / numTrails));
+        trails[i].el.style.transform = 'translate3d(' + (pos.x - window.scrollX) + 'px, ' + (pos.y - window.scrollY) + 'px, 0) scale(' + scale + ')';
+        trails[i].el.style.opacity = opacity;
+      }
+
+      if (speed > speedOriginal) {
+        speed *= 0.98;
+        var currentSpeed = Math.sqrt(vx*vx + vy*vy);
+        vx = (vx / currentSpeed) * speed;
+        vy = (vy / currentSpeed) * speed;
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    wrapper.addEventListener('mouseenter', function(e) {
+      var rect = wrapper.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+      
+      var dx = cx - e.clientX;
+      var dy = cy - e.clientY;
+      
+      if (dx === 0 && dy === 0) {
+        dx = Math.random() - 0.5;
+        dy = Math.random() - 0.5;
+      }
+
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      
+      speed = speedOriginal * 3.5; 
+      vx = (dx / dist) * speed;
+      vy = (dy / dist) * speed;
+
+      visual.classList.add('hit');
+      setTimeout(function(){ visual.classList.remove('hit'); }, 150);
+    });
+
+    requestAnimationFrame(update);
+  }
+
   // ── Boot ────────────────────────────────────────────────────────────────
   function boot() {
     initReveal();
     initSearch();
     initBurger();
     initHeaderScroll();
+    initBouncingBall();
   }
 
   if (document.readyState === 'loading') {
@@ -661,6 +757,40 @@ import { ui } from '../i18n/es';
   }
 
   html { scroll-behavior: smooth; }
+</style>
+
+<style is:global>
+  /* ═══ BOUNCING BALL ═════════════════════════════════════════════════════ */
+  .padel-bounce-wrapper {
+    position: fixed; top: 0; left: 0;
+    width: 24px; height: 24px;
+    z-index: 9999;
+    will-change: transform;
+  }
+  .padel-bounce-visual {
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at 30% 30%, #eef024, #9ca300);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(238, 240, 36, 0.6);
+    transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.1s;
+    cursor: crosshair;
+  }
+  .padel-bounce-visual.hit {
+    transform: scale(1.4);
+    filter: brightness(1.3) drop-shadow(0 0 20px #eef024);
+  }
+  .padel-bounce-trail {
+    position: fixed; top: 0; left: 0;
+    width: 24px; height: 24px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    z-index: 9998;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+</style>
+
+<style>
 
   /* ═══ BACKGROUND ════════════════════════════════════════════════════════ */
   .page-bg {
@@ -673,8 +803,7 @@ import { ui } from '../i18n/es';
   .bg-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.22;
+    opacity: 0.4;
     will-change: transform;
   }
   .orb-1 {
@@ -846,6 +975,7 @@ import { ui } from '../i18n/es';
     min-height: 100svh;
     display: flex; flex-direction: column; justify-content: center;
     padding: 80px 24px;
+    overflow: hidden;
   }
   .hero-content {
     max-width: 1160px; margin: 0 auto; width: 100%;
@@ -919,8 +1049,9 @@ import { ui } from '../i18n/es';
   }
 
   .phone-glow {
-    position: absolute; border-radius: 50%; filter: blur(60px);
+    position: absolute; border-radius: 50%;
     pointer-events: none;
+    will-change: transform, opacity;
   }
   .glow-a {
     width: 300px; height: 300px;
@@ -1258,7 +1389,7 @@ import { ui } from '../i18n/es';
     line-height: 1; font-family: var(--font-heading);
     opacity: 0.9;
   }
-  .step-body h4 { font-size: 20px; font-weight: 800; margin: 0 0 10px; font-family: var(--font-heading);}
+  .step-body h4 { font-size: 20px; font-weight: 800; margin: 0 0 10px; font-family: var(--font-heading); color: var(--text); }
   .step-body p  { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0; font-weight: 500;}
   .step-arrow {
     position: absolute; right: 24px; top: 50%;
@@ -1500,7 +1631,15 @@ import { ui } from '../i18n/es';
   .cta-logo-large {
     width: 80px; height: 80px;
     margin: 0 auto 32px;
-    animation: logo-spin-in 1.8s cubic-bezier(.19,1,.22,1) both;
+    animation: logo-spin-in 1.8s cubic-bezier(.19,1,.22,1) both, cta-spin-continuous 15s linear 1.8s infinite;
+  }
+  @keyframes logo-spin-in {
+    0% { transform: rotate(-1080deg) scale(0.4); opacity: 0; }
+    100% { transform: rotate(0deg) scale(1); opacity: 1; }
+  }
+  @keyframes cta-spin-continuous {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
   .cta-h2 {
     font-size: clamp(36px, 5vw, 64px);
