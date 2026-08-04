@@ -1,0 +1,109 @@
+export const ui = {
+  nav: {
+    howItWorks: '¿Cómo funciona?',
+    yourMatch: 'Tu Partido',
+    pricing: 'Planes',
+    contact: 'Contacto',
+    sales: 'Hablar con ventas'
+  },
+  hero: {
+    badge: 'Automatización deportiva inteligente',
+    titleLine1: 'Tu pádel,',
+    titleHighlight: 'grabado y en tu cel',
+    titleLine2: 'sin esfuerzo.',
+    subtitle: 'Instalamos cámaras en tus canchas. Cada partido se graba solo, sube a la nube y le llega al jugador por WhatsApp. Tu club, sin mover un dedo.',
+    ctaPrimary: 'Ver planes',
+    ctaSecondary: '¿Cómo funciona? →',
+    trust1: '100%',
+    trust1Sub: 'Automático',
+    trust2: 'HD',
+    trust2Sub: 'Calidad de video',
+    trust3: '0',
+    trust3Sub: 'Intervención del staff',
+    scroll: 'Desplazá'
+  },
+  features: {
+    label: 'EL SISTEMA',
+    title1: 'Todo automatizado,',
+    title2: 'cero intervención',
+    camTitle: 'Cámaras Ultra HD',
+    camDesc: 'Instaladas estratégicamente para capturar la cancha completa. Arrancan solas con cada turno y se apagan solas al finalizar.',
+    uploadTitle: 'Subida instantánea',
+    uploadDesc: 'Al finalizar, el video se codifica y sube al servidor en segundos.',
+    linkTitle: 'Link por WhatsApp',
+    linkDesc: 'El jugador recibe su link personal. Sin apps ni registro.',
+    viralTitle: 'Marketing viral',
+    viralDesc: 'Cada video compartido lleva la marca de tu club a miles de personas.',
+    coverageTitle: 'Cobertura total de cancha',
+    coverageDesc: 'Ángulo 180° desde la parte trasera, capturando cada rincón, cada golpe y cada momento memorable de tus jugadores.',
+    coverageStat: 'Cobertura',
+    uptimeStat: 'Uptime'
+  },
+  howItWorks: {
+    label: 'FLUJO',
+    title1: 'De la cancha',
+    title2: 'a tu celular',
+    step1Title: 'Inicia el turno',
+    step1Desc: 'La app detecta el inicio del partido y arranca la cámara automáticamente. Sin presionar ningún botón.',
+    step2Title: 'Procesado en nube',
+    step2Desc: 'Al terminar, el video se codifica en HD y sube al almacenamiento seguro en menos de 5 minutos.',
+    step3Title: 'Link por WhatsApp',
+    step3Desc: 'El jugador recibe su link personal. Puede reproducir, descargar y compartir en Instagram y TikTok.'
+  },
+  showcase: {
+    label: 'EXPERIENCIA DEL JUGADOR',
+    title1: 'Tu partido,',
+    title2: 'en el celular',
+    titleHighlight: 'en minutos',
+    desc: 'El jugador recibe un mensaje de WhatsApp con su link único. Abre el video desde el navegador sin descargar nada, lo puede compartir en Instagram o TikTok con un solo toque.',
+    check1: 'Reproducción HD en cualquier celular',
+    check2: 'Descarga directa sin registro',
+    check3: 'Compatible con Instagram, TikTok y YouTube',
+    check4: 'Link personal e intransferible',
+    demoCta: 'Probar demo →',
+    screenStatusReady: 'Tu partido listo',
+    screenMatchName: 'Juan P. vs Diego M.',
+    screenMatchDate: 'Hoy · Cancha 3 · 16:30 hs',
+    screenBtnDownload: 'Descargar',
+    screenBtnShare: 'Compartir'
+  },
+  search: {
+    label: 'PORTAL DEL JUGADOR',
+    title1: '¿Buscás el video',
+    title2: 'de tu partido?',
+    desc: 'Ingresá el código que recibiste por WhatsApp y accedé a tu video al instante.',
+    placeholder: 'Pegá tu código de partido aquí...',
+    btn: 'Ver partido',
+    error: 'Código inválido. Revisá el link que recibiste por WhatsApp.',
+    hint: 'Ejemplo:'
+  },
+  pricing: {
+    label: 'PLANES',
+    title1: 'Elegí el plan',
+    title2: 'de tu club',
+    sub: 'Todos incluyen instalación, configuración y soporte. Sin sorpresas.',
+    basicTitle: 'Básico',
+    basicPrice: 'Consultar',
+    basicDesc: 'Para clubes que quieren comenzar a ofrecer este servicio.',
+    proBadge: 'RECOMENDADO',
+    proTitle: 'Club Pro',
+    proPrice: 'Consultar',
+    proDesc: 'Potenciá el marketing y fidelizá jugadores.',
+    eliteTitle: 'Elite',
+    elitePrice: 'Consultar',
+    eliteDesc: 'Grandes complejos y cadenas deportivas.'
+  },
+  cta: {
+    label: 'EMPEZÁ HOY',
+    title1: '¿Tu club listo para',
+    titleHighlight: 'el siguiente nivel?',
+    body: 'Escribinos y en menos de 48 hs tenemos una propuesta personalizada para tu complejo.',
+    btn: 'Hablar por WhatsApp'
+  },
+  footer: {
+    copy: 'Todos los derechos reservados',
+    navSystem: 'Sistema',
+    navHow: '¿Cómo funciona?',
+    navPlans: 'Planes'
+  }
+};

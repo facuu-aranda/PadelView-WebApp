@@ -1,6 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getSupabase, getSignedVideoUrl } from '../../lib/server-services';
+import AlertTriangle from '../../components/icons/AlertTriangle.astro';
+import Download from '../../components/icons/Download.astro';
+import LinkIcon from '../../components/icons/Link.astro';
+import Zap from '../../components/icons/Zap.astro';
+import AntigravityBackground from '../../components/AntigravityBackground.astro';
 
 const { match_id } = Astro.params;
 
@@ -69,17 +74,18 @@ const formattedTime = match
   : '';
 ---
 
-<Layout title={match ? `Partido de ${match.player_name} - PadelView` : 'PadelView'}>
+<Layout title={match ? `Partido de ${match.player_name} - ViewPadel` : 'ViewPadel'}>
+  <AntigravityBackground />
   <div class="web-container">
     {/* Header */}
     <header class="web-header">
-      <div class="logo">
-        <div class="logo-icon">PV</div>
+      <a href="/" class="logo-link">
+        <div class="logo-viewpadel"></div>
         <div class="logo-text">
-          <h1>PadelView</h1>
-          <span>Sportivo Belgrano</span>
+          <h1>ViewPadel</h1>
+          <span>Cámaras Inteligentes</span>
         </div>
-      </div>
+      </a>
       {match && (
         <div class="court-badge">
           {match.courts?.name || 'Cancha Registrada'}
@@ -92,11 +98,13 @@ const formattedTime = match
       {/* 1. ERROR STATE */}
       {errorMessage && (
         <div class="status-card error-card">
-          <div class="status-icon">⚠️</div>
+          <div class="status-icon error-icon">
+            <AlertTriangle size={48} />
+          </div>
           <h2>¡Ups! Algo no salió bien</h2>
           <p class="error-msg">{errorMessage}</p>
           <div class="support-footer">
-            <p>Si consideras que esto es un error, contacta a la administración de Sportivo Belgrano.</p>
+            <p>Si consideras que esto es un error, contacta a la administración de tu club.</p>
             <a href="/" class="btn btn-secondary">Volver al inicio</a>
           </div>
         </div>
@@ -128,7 +136,19 @@ const formattedTime = match
             </div>
             <div class="detail-row">
               <span class="label">Estado actual:</span>
-              <span class="val status-pill">{match.status === 'RECORDING' ? '🔴 GRABANDO EN VIVO' : '⚡ SUBIENDO VIDEO...'}</span>
+              <span class="val status-pill">
+                {match.status === 'RECORDING' ? (
+                  <span class="status-indicator live">
+                    <span class="pulse-dot-mini"></span>
+                    GRABANDO EN VIVO
+                  </span>
+                ) : (
+                  <span class="status-indicator uploading">
+                    <Zap size={14} class="spin-slow" />
+                    SUBIENDO VIDEO...
+                  </span>
+                )}
+              </span>
             </div>
           </div>
           
@@ -169,7 +189,9 @@ const formattedTime = match
 
             <div class="action-buttons">
               <a href={signedUrl} download class="btn btn-primary btn-lg">
-                <span class="btn-icon">📥</span>
+                <span class="btn-icon">
+                  <Download size={18} />
+                </span>
                 Descargar Video Completo
               </a>
               <button 
@@ -178,8 +200,8 @@ const formattedTime = match
                 onclick={`
                   if(navigator.share) {
                     navigator.share({
-                      title: 'Mi partido en Sportivo Belgrano',
-                      text: '¡Mira la grabación de mi partido en PadelView!',
+                      title: 'Mi partido en ViewPadel',
+                      text: '¡Mira la grabación de mi partido en ViewPadel!',
                       url: window.location.href
                     });
                   } else {
@@ -188,7 +210,9 @@ const formattedTime = match
                   }
                 `}
               >
-                <span class="btn-icon">🔗</span>
+                <span class="btn-icon">
+                  <LinkIcon size={18} />
+                </span>
                 Compartir Enlace
               </button>
             </div>
@@ -199,10 +223,38 @@ const formattedTime = match
 
     {/* Footer */}
     <footer class="web-footer">
-      <p>© {new Date().getFullYear()} PadelView. Desarrollado para Club Sportivo Belgrano.</p>
+      <p>© {new Date().getFullYear()} ViewPadel. Todos los derechos reservados.</p>
     </footer>
   </div>
 </Layout>
+
+<script is:inline>
+  // Asynchronous SVG Logo Loader
+  function loadLogos() {
+    const containers = document.querySelectorAll('.logo-viewpadel');
+    if (containers.length === 0) return;
+
+    fetch('/logo-viewpadel.svg')
+      .then(response => {
+        if (!response.ok) throw new Error('Logo fetch failed');
+        return response.text();
+      })
+      .then(svgText => {
+        containers.forEach(container => {
+          container.innerHTML = svgText;
+        });
+      })
+      .catch(err => {
+        console.error('Error fetching optimized ViewPadel logo:', err);
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadLogos);
+  } else {
+    loadLogos();
+  }
+</script>
 
 <style>
   /* Base Layout and Container styling */
@@ -210,7 +262,7 @@ const formattedTime = match
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: radial-gradient(circle at 50% 0%, #152238 0%, #0b0f19 80%);
+    background: transparent;
     color: #f8fafc;
     font-family: 'Outfit', sans-serif;
   }
@@ -219,29 +271,53 @@ const formattedTime = match
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 40px;
+    padding: 16px 40px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    background-color: rgba(11, 15, 25, 0.5);
+    background-color: rgba(6, 9, 14, 0.7);
     backdrop-filter: blur(10px);
   }
 
-  .logo {
+  .logo-link {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
+    text-decoration: none;
+    color: #fff;
   }
 
-  .logo-icon {
+  .logo-viewpadel {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.85));
+    animation: logo-spin-in 2.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
+  }
+
+  .logo-viewpadel :global(svg) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .logo-viewpadel :global(svg path) {
+    fill: url(#logo-gradient) !important;
+    stroke: url(#logo-gradient) !important;
+  }
+
+  .logo-link:hover .logo-viewpadel {
+    transform: rotate(360deg);
+    filter: drop-shadow(0 0 14px rgba(0, 255, 135, 1));
+  }
+
+  @keyframes logo-spin-in {
+    0% {
+      transform: rotate(-1080deg) scale(0.4);
+      opacity: 0;
+    }
+    100% {
+      transform: rotate(0deg) scale(1);
+      opacity: 1;
+    }
   }
 
   .logo-text h1 {
@@ -249,12 +325,17 @@ const formattedTime = match
     font-weight: 700;
     line-height: 1.1;
     margin: 0;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   .logo-text span {
-    font-size: 12px;
+    font-size: 11px;
     color: #94a3b8;
     letter-spacing: 0.5px;
+    display: block;
+    margin-top: -1px;
   }
 
   .court-badge {
@@ -292,8 +373,14 @@ const formattedTime = match
   }
 
   .status-icon {
-    font-size: 48px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 20px;
+  }
+
+  .error-icon {
+    color: #ef4444;
   }
 
   .status-card h2 {
@@ -491,7 +578,9 @@ const formattedTime = match
   }
 
   .btn-icon {
-    font-size: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .web-footer {
@@ -518,6 +607,48 @@ const formattedTime = match
       transform: translate(-50%, -50%) scale(1.4);
       opacity: 0.45;
     }
+  }
+
+  @keyframes pulse-mini {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+      box-shadow: 0 0 8px currentColor;
+    }
+    50% {
+      transform: scale(1.3);
+      opacity: 0.6;
+      box-shadow: 0 0 14px currentColor;
+    }
+  }
+
+  .spin-slow {
+    animation: spin 3s linear infinite;
+  }
+
+  .status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .status-indicator.live {
+    color: #ef4444;
+  }
+  
+  .status-indicator.uploading {
+    color: #38bdf8;
+  }
+
+  .pulse-dot-mini {
+    width: 8px;
+    height: 8px;
+    background-color: currentColor;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse-mini 1.5s infinite;
   }
 
   /* Responsive styling */

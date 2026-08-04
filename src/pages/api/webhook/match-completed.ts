@@ -25,7 +25,7 @@ export const POST: APIRoute = async ({ request }) => {
       const baseUrl = new URL(request.url).origin;
       const matchUrl = `${baseUrl}/partido/${id}`;
       
-      const message = `¡Hola ${player_name}! 🎾 Tu partido en Sportivo Belgrano ya está disponible para ver y descargar. Accedé mediante este enlace: ${matchUrl}`;
+      const message = `¡Hola ${player_name}! 🎾 Tu partido ya está disponible para ver y descargar en ViewPadel. Accedé mediante este enlace: ${matchUrl}`;
       
       // WhatsApp API configuration via env vars
       const provider = process.env.WHATSAPP_PROVIDER; // 'TWILIO' | 'GREEN_API'

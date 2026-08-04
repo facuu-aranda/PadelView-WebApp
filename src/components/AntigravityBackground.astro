@@ -1,0 +1,269 @@
+---
+---
+<canvas id="ag-canvas"></canvas>
+
+<style>
+  #ag-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+  }
+</style>
+
+<script is:inline>
+(function () {
+  'use strict';
+
+  // ══════════════════════════════════════════════════════════════════════
+  //  Brand colors — ViewPadel (cyan ↔ green gradient palette)
+  // ══════════════════════════════════════════════════════════════════════
+  const BRAND = [
+    { r:   0, g: 242, b: 254 },   // #00f2fe  cyan  (primary)
+    { r:   0, g: 255, b: 135 },   // #00ff87  green (secondary)
+    { r:  56, g: 189, b: 248 },   // #38bdf8  sky blue
+    { r: 103, g: 232, b: 249 },   // #67e8f9  lighter cyan
+    { r: 255, g: 255, b: 255 },   // white spark (rare)
+  ];
+
+  // ══════════════════════════════════════════════════════════════════════
+  //  Physics constants
+  // ══════════════════════════════════════════════════════════════════════
+  const PARTICLE_COUNT = 220;
+  const CLOUD_RADIUS   = 180;   // cloud spread around cursor
+  const SPRING         = 0.048; // how fast particles chase their home
+  const FRICTION       = 0.82;  // velocity damping — makes movement "dense"
+  const GRAVITY        = -0.012;// constant upward anti-gravity nudge
+  const CURSOR_LAG     = 0.08;  // how fast the cloud CENTER moves to cursor
+
+  // ══════════════════════════════════════════════════════════════════════
+  //  Canvas
+  // ══════════════════════════════════════════════════════════════════════
+  const canvas = document.getElementById('ag-canvas');
+  const ctx    = canvas.getContext('2d');
+  let W = 0, H = 0, dpr = 1;
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    W   = window.innerWidth;
+    H   = window.innerHeight;
+    canvas.width        = Math.round(W * dpr);
+    canvas.height       = Math.round(H * dpr);
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  // ══════════════════════════════════════════════════════════════════════
+  //  Sprite cache — one glowing orb per (radius, colorIndex)
+  //  Pre-rendered so the RAF loop only calls drawImage()
+  // ══════════════════════════════════════════════════════════════════════
+  const spriteCache = new Map();
+
+  function buildSprite(r, c) {
+    const key = `${r}_${c}`;
+    if (spriteCache.has(key)) return spriteCache.get(key);
+
+    const glow = r * 5;
+    const dim  = Math.ceil((r + glow) * 2 + 2);
+    const sc   = document.createElement('canvas');
+    sc.width   = Math.round(dim * dpr);
+    sc.height  = Math.round(dim * dpr);
+    const sx   = sc.getContext('2d');
+    sx.scale(dpr, dpr);
+
+    const cx = dim / 2, cy = dim / 2;
+    const col = BRAND[c];
+
+    // Outer glow halo
+    const g1 = sx.createRadialGradient(cx, cy, 0, cx, cy, r + glow);
+    g1.addColorStop(0,   `rgba(${col.r},${col.g},${col.b},0.28)`);
+    g1.addColorStop(0.5, `rgba(${col.r},${col.g},${col.b},0.10)`);
+    g1.addColorStop(1,   `rgba(${col.r},${col.g},${col.b},0)`);
+    sx.beginPath();
+    sx.arc(cx, cy, r + glow, 0, Math.PI * 2);
+    sx.fillStyle = g1;
+    sx.fill();
+
+    // Bright core
+    const g2 = sx.createRadialGradient(cx, cy, 0, cx, cy, r);
+    g2.addColorStop(0,   `rgba(255,255,255,0.95)`);
+    g2.addColorStop(0.3, `rgba(${col.r},${col.g},${col.b},0.9)`);
+    g2.addColorStop(1,   `rgba(${col.r},${col.g},${col.b},0)`);
+    sx.beginPath();
+    sx.arc(cx, cy, r, 0, Math.PI * 2);
+    sx.fillStyle = g2;
+    sx.fill();
+
+    const entry = { canvas: sc, dim };
+    spriteCache.set(key, entry);
+    return entry;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════
+  //  Cloud center — this is the point all particles orbit
+  //  It lazily follows the real mouse position
+  // ══════════════════════════════════════════════════════════════════════
+  let cloud = { x: 0, y: 0 };       // current cloud center
+  let target = { x: 0, y: 0 };      // real mouse / default rest
+
+  // ══════════════════════════════════════════════════════════════════════
+  //  Particle — each lives at homeX/homeY relative to cloud center
+  // ══════════════════════════════════════════════════════════════════════
+  function makeParticle() {
+    // Polar offset inside the cloud sphere
+    const angle  = Math.random() * Math.PI * 2;
+    const dist   = Math.pow(Math.random(), 0.5) * CLOUD_RADIUS; // sqrt bias → denser core
+    const offX   = Math.cos(angle) * dist;
+    const offY   = Math.sin(angle) * dist;
+
+    // Layer (depth) decides size and opacity
+    const layer  = Math.random(); // 0=bg, 1=fg
+    const r      = 0.8 + layer * 3.2;    // 0.8 .. 4 px
+    const alpha  = 0.15 + layer * 0.55;  // bg=faint, fg=bright
+
+    // Color — pick from brand palette; white only for smallest sparks
+    const allowWhite = r < 1.5;
+    const maxColor = allowWhite ? BRAND.length - 1 : BRAND.length - 2;
+    const colorIdx = Math.floor(Math.random() * (maxColor + 1));
+
+    // Slight random drift so cloud breathes
+    const driftAngle = Math.random() * Math.PI * 2;
+    const driftSpeed = 0.08 + Math.random() * 0.18;
+
+    const sprite = buildSprite(Math.max(0.8, Math.round(r)), colorIdx);
+
+    return {
+      // Current position (starts at cloud center + offset)
+      x: cloud.x + offX,
+      y: cloud.y + offY,
+      // Velocity
+      vx: 0,
+      vy: 0,
+      // Home offset (relative to cloud center), slowly rotates
+      offX, offY,
+      offAngle: angle,
+      offDist: dist,
+      // Drift
+      driftAngle, driftSpeed,
+      // Visual
+      r, alpha, colorIdx, layer,
+      sprite,
+    };
+  }
+
+  let particles = [];
+
+  function init() {
+    resize();
+    spriteCache.clear();
+    // Cloud starts at screen center
+    cloud.x  = W / 2;
+    cloud.y  = H / 2;
+    target.x = W / 2;
+    target.y = H / 2;
+    particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(makeParticle());
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════════════════
+  //  Mouse tracking
+  // ══════════════════════════════════════════════════════════════════════
+  window.addEventListener('mousemove', e => {
+    target.x = e.clientX;
+    target.y = e.clientY;
+  });
+  window.addEventListener('touchmove', e => {
+    if (e.touches.length) {
+      target.x = e.touches[0].clientX;
+      target.y = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  // ══════════════════════════════════════════════════════════════════════
+  //  Animation loop
+  // ══════════════════════════════════════════════════════════════════════
+  let rafId = 0;
+
+  function tick() {
+    // ── 1. Move cloud center lazily toward cursor ───────────────────────
+    cloud.x += (target.x - cloud.x) * CURSOR_LAG;
+    cloud.y += (target.y - cloud.y) * CURSOR_LAG;
+
+    // ── 2. Clear ────────────────────────────────────────────────────────
+    ctx.fillStyle = '#0d1117';
+    ctx.fillRect(0, 0, W, H);
+
+    // ── 3. Update & draw each particle ─────────────────────────────────
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+
+      // Slowly drift the home offset (makes the cloud breathe)
+      p.driftAngle += p.driftSpeed * 0.01;
+      const homeX = cloud.x + p.offX + Math.cos(p.driftAngle) * 6 * p.layer;
+      const homeY = cloud.y + p.offY + Math.sin(p.driftAngle) * 6 * p.layer
+                  + GRAVITY * 60 * p.layer; // foreground particles drift up faster
+
+      // Spring toward home
+      const ax = (homeX - p.x) * SPRING;
+      const ay = (homeY - p.y) * SPRING;
+
+      // Anti-gravity push on velocity (constant upward nudge)
+      p.vx = (p.vx + ax) * FRICTION;
+      p.vy = (p.vy + ay + GRAVITY * p.layer) * FRICTION;
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // ── Draw via cached sprite ────────────────────────────────────────
+      const { canvas: sc, dim } = p.sprite;
+      ctx.globalAlpha = p.alpha;
+      ctx.drawImage(sc, p.x - dim / 2, p.y - dim / 2, dim, dim);
+    }
+
+    ctx.globalAlpha = 1;
+    rafId = requestAnimationFrame(tick);
+  }
+
+  // ══════════════════════════════════════════════════════════════════════
+  //  Resize handler
+  // ══════════════════════════════════════════════════════════════════════
+  let resizeTimer = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      cancelAnimationFrame(rafId);
+      spriteCache.clear();
+      resize();
+      // Reposition cloud to new center if target hasn't moved
+      if (target.x === cloud.x && target.y === cloud.y) {
+        cloud.x = target.x = W / 2;
+        cloud.y = target.y = H / 2;
+      }
+      // Rebuild sprites (DPR may have changed)
+      particles.forEach(p => {
+        p.sprite = buildSprite(Math.max(0.8, Math.round(p.r)), p.colorIdx);
+      });
+      tick();
+    }, 100);
+  });
+
+  // ══════════════════════════════════════════════════════════════════════
+  //  Boot
+  // ══════════════════════════════════════════════════════════════════════
+  function boot() { init(); tick(); }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+
+})();
+</script>

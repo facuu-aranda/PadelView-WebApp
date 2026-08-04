@@ -1,384 +1,1592 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { ui } from '../i18n/es';
 ---
 
-<Layout title="PadelView - Sportivo Belgrano">
-  <div class="landing-container">
-    {/* Header */}
-    <header class="web-header">
-      <div class="logo">
-        <div class="logo-icon">PV</div>
-        <div class="logo-text">
-          <h1>PadelView</h1>
-          <span>Sportivo Belgrano</span>
-        </div>
-      </div>
-    </header>
+<Layout title="ViewPadel — Grabación y distribución automática de partidos de pádel">
 
-    {/* Hero Section */}
-    <main class="hero-section">
-      <div class="hero-content">
-        <span class="pill-badge">NUEVO SERVICIO</span>
-        <h1>Reviví tus partidos y compartí tus mejores jugadas</h1>
-        <p class="hero-description">
-          Grabación automática en alta definición de tus partidos de pádel en el club. Descargá, compartí y analizá tus jugadas fácilmente.
-        </p>
-
-        {/* Match Search Box */}
-        <div class="search-card">
-          <h3>¿Tenés el código de tu partido?</h3>
-          <p class="search-hint">Ingresá el identificador único (UUID) enviado a tu WhatsApp para acceder al video.</p>
-          
-          <form class="search-form" id="search-form">
-            <input 
-              type="text" 
-              id="match-id-input"
-              placeholder="Ej. e29e92a8-f542-4911-b0db-bcf616cc3fdf" 
-              required
-              pattern="^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-              title="Debe ser un identificador UUID válido"
-            />
-            <button type="submit" class="btn btn-primary">
-              Ver Partido
-            </button>
-          </form>
-          <div id="error-message" class="error-msg hidden">Por favor ingresa un código de partido válido.</div>
-        </div>
-      </div>
-
-      {/* Feature grid */}
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-icon">🎥</div>
-          <h3>Cámaras HD en Vivo</h3>
-          <p>Grabamos tus partidos directamente desde el ángulo óptimo de la cancha sin interrupciones.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3>Listos en Minutos</h3>
-          <p>Al finalizar tu turno, el video se procesa e importa a la nube automáticamente de forma súper rápida.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📲</div>
-          <h3>Compartí con un Clic</h3>
-          <p>Recibí el enlace en tu celular para descargarlo o reproducirlo directamente desde cualquier dispositivo móvil.</p>
-        </div>
-      </div>
-    </main>
-
-    {/* Footer */}
-    <footer class="web-footer">
-      <p>© {new Date().getFullYear()} PadelView. Desarrollado para Club Sportivo Belgrano.</p>
-    </footer>
+  <!-- ── Tech Sports Background Grid ── -->
+  <div class="page-bg" aria-hidden="true">
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+    <!-- Court floor abstract lines -->
+    <div class="court-lines">
+      <div class="court-line vertical center-line"></div>
+      <div class="court-line horizontal service-line"></div>
+    </div>
+    <div class="grid-lines"></div>
   </div>
+
+  <!-- ═══════════════ HEADER ═══════════════════════════════════════════════ -->
+  <header class="site-header" id="top">
+    <div class="header-inner">
+      <a href="/" class="logo-link" aria-label="ViewPadel inicio">
+        <!-- Changed to img tag to prevent 7.5MB SVG parsing block -->
+        <img src="/asereje-gradient.min.svg" alt="ViewPadel" class="logo-img glow-effect" />
+        <span class="logo-text">ViewPadel</span>
+      </a>
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <a href="#como-funciona">{ui.nav.howItWorks}</a>
+        <a href="#busca-tu-partido">{ui.nav.yourMatch}</a>
+        <a href="#planes">{ui.nav.pricing}</a>
+        <a href="#soporte">{ui.nav.contact}</a>
+      </nav>
+      <a
+        href="https://wa.me/5493564575862?text=Hola!%20Me%20interesa%20ViewPadel."
+        target="_blank" rel="noopener"
+        class="header-cta"
+      >{ui.nav.sales}</a>
+      <button class="burger" id="burger" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Menú móvil">
+      <a href="#como-funciona" class="mob-link">{ui.nav.howItWorks}</a>
+      <a href="#busca-tu-partido" class="mob-link">{ui.nav.yourMatch}</a>
+      <a href="#planes" class="mob-link">{ui.nav.pricing}</a>
+      <a href="#soporte" class="mob-link">{ui.nav.contact}</a>
+    </nav>
+  </header>
+
+  <!-- ═══════════════ HERO ══════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-content">
+      <!-- Left copy -->
+      <div class="hero-copy reveal-up">
+        <div class="hero-badge tech-badge">
+          <span class="badge-dot"></span>
+          {ui.hero.badge}
+        </div>
+        <h1 class="hero-h1">
+          {ui.hero.titleLine1}<br/>
+          <span class="gradient-text">{ui.hero.titleHighlight}</span><br/>
+          {ui.hero.titleLine2}
+        </h1>
+        <p class="hero-sub">
+          {ui.hero.subtitle}
+        </p>
+        <div class="hero-actions">
+          <a href="#planes" class="btn primary glass-glow">{ui.hero.ctaPrimary}</a>
+          <a href="#como-funciona" class="btn ghost tech-border">{ui.hero.ctaSecondary}</a>
+        </div>
+        <!-- Trust strip -->
+        <div class="trust-row">
+          <div class="trust-item">
+            <strong>{ui.hero.trust1}</strong><span>{ui.hero.trust1Sub}</span>
+          </div>
+          <div class="trust-divider"></div>
+          <div class="trust-item">
+            <strong>{ui.hero.trust2}</strong><span>{ui.hero.trust2Sub}</span>
+          </div>
+          <div class="trust-divider"></div>
+          <div class="trust-item">
+            <strong>{ui.hero.trust3}</strong><span>{ui.hero.trust3Sub}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right — Hero phone mockup -->
+      <div class="hero-visual reveal-up" style="--delay:180ms">
+        <div class="phone-wrap tall-phone-wrap">
+          <!-- Ambient glows behind phone -->
+          <div class="phone-glow glow-a"></div>
+          <div class="phone-glow glow-b"></div>
+
+          <!-- The phone (Taller proportions) -->
+          <div class="iphone tall-iphone">
+            <div class="iphone-island"></div>
+            <div class="iphone-screen">
+
+              <!-- Status bar -->
+              <div class="iphone-statusbar">
+                <span>9:41</span>
+                <div class="sb-icons">
+                  <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><rect x="0" y="3" width="3" height="7" rx="1" fill="white" opacity=".4"/><rect x="4" y="2" width="3" height="8" rx="1" fill="white" opacity=".6"/><rect x="8" y="0" width="3" height="10" rx="1" fill="white" opacity=".8"/><rect x="12" y="0" width="2" height="10" rx="1" fill="white"/></svg>
+                  <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M2 5C3.6 2.2 6.8 1 7 1s3.4 1.2 5 4c-1.6 2.8-4.8 4-5 4S3.6 7.8 2 5Z" stroke="white" stroke-width="1.2" fill="none" opacity=".8"/><circle cx="7" cy="5" r="1.5" fill="white"/></svg>
+                  <svg width="16" height="10" viewBox="0 0 16 10" fill="none"><rect x="0.5" y="0.5" width="13" height="9" rx="2.5" stroke="white" stroke-opacity=".4"/><rect x="1.5" y="1.5" width="9" height="7" rx="1.5" fill="white"/><path d="M14 3.5v3a1.5 1.5 0 0 0 0-3Z" fill="white" opacity=".4"/></svg>
+                </div>
+              </div>
+
+              <!-- Header bar -->
+              <div class="iphone-app-header">
+                <img src="/asereje-gradient.min.svg" alt="VP" class="app-logo-small glow-effect" />
+                <span class="app-title">ViewPadel</span>
+                <svg class="app-share" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+              </div>
+
+              <!-- Video player area -->
+              <div class="iphone-player">
+                <div class="player-court-bg">
+                  <!-- Padel court SVG illustration -->
+                  <svg class="court-svg" viewBox="0 0 280 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="280" height="160" fill="#0b172a"/>
+                    <!-- Court floor -->
+                    <rect x="20" y="30" width="240" height="120" rx="2" fill="#132c52" stroke="#38bdf8" stroke-width="1.2" stroke-opacity="0.5"/>
+                    <!-- Center line -->
+                    <line x1="140" y1="30" x2="140" y2="150" stroke="#38bdf8" stroke-width="0.8" stroke-opacity="0.6"/>
+                    <!-- Service box lines -->
+                    <line x1="20" y1="90" x2="260" y2="90" stroke="#38bdf8" stroke-width="0.8" stroke-opacity="0.5"/>
+                    <!-- Net -->
+                    <rect x="135" y="30" width="10" height="120" fill="#0ea5e9" opacity="0.3"/>
+                    <line x1="140" y1="30" x2="140" y2="150" stroke="#38bdf8" stroke-width="2" stroke-opacity="0.9"/>
+                    <!-- Ball -->
+                    <circle cx="90" cy="75" r="8" fill="#00ff87" opacity="0.9" style="filter: drop-shadow(0 0 6px #00ff87)">
+                      <animateMotion dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1; 0.4 0 0.6 1">
+                        <mpath href="#ball-path"/>
+                      </animateMotion>
+                    </circle>
+                    <path id="ball-path" d="M90 75 Q180 40 180 80 Q180 120 90 95 Q90 75 90 75" fill="none"/>
+                    <!-- Players silhouettes -->
+                    <ellipse cx="80" cy="140" rx="12" ry="5" fill="#0f172a" opacity="0.8"/>
+                    <rect x="74" y="108" width="12" height="30" rx="4" fill="#0284c7" opacity="0.8"/>
+                    <circle cx="80" cy="103" r="7" fill="#0ea5e9" opacity="0.9"/>
+                    
+                    <ellipse cx="200" cy="140" rx="12" ry="5" fill="#0f172a" opacity="0.8"/>
+                    <rect x="194" y="108" width="12" height="30" rx="4" fill="#7c3aed" opacity="0.8"/>
+                    <circle cx="200" cy="103" r="7" fill="#a855f7" opacity="0.9"/>
+                  </svg>
+                  <!-- Play button overlay -->
+                  <button class="play-btn tech-play" aria-label="Reproducir">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  </button>
+                  <!-- Live badge -->
+                  <div class="rec-badge">
+                    <span class="rec-dot"></span> GRABANDO
+                  </div>
+                  <!-- Progress bar -->
+                  <div class="player-progress">
+                    <div class="progress-bar">
+                      <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-times">
+                      <span>32:14</span><span>01:24:00</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Info card -->
+              <div class="iphone-info-card">
+                <div class="info-left">
+                  <div class="info-court-tag">Cancha 3</div>
+                  <div class="info-match-name">Juan P. &amp; Diego M.</div>
+                  <div class="info-date">Hoy · 16:30 hs</div>
+                </div>
+                <div class="info-actions">
+                  <button class="info-action-btn download">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                  </button>
+                  <button class="info-action-btn share">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Filler to push notification down in taller phone -->
+              <div class="iphone-spacer"></div>
+
+              <!-- WhatsApp notification pill -->
+              <div class="iphone-notif">
+                <div class="notif-app-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+                </div>
+                <div class="notif-text">
+                  <div class="notif-title">ViewPadel</div>
+                  <div class="notif-body">Tu partido está listo 🎾 Ver ahora →</div>
+                </div>
+                <div class="notif-time">ahora</div>
+              </div>
+
+            </div><!-- /iphone-screen -->
+          </div><!-- /iphone -->
+
+          <!-- Floating detail badges -->
+          <div class="float-badge badge-hd tech-border">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4Z"/></svg>
+            Full HD
+          </div>
+          <div class="float-badge badge-auto tech-border">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Automático
+          </div>
+          <div class="float-badge badge-wp tech-border">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+            WhatsApp
+          </div>
+        </div><!-- /phone-wrap -->
+      </div><!-- /hero-visual -->
+    </div><!-- /hero-content -->
+
+    <!-- Scroll indicator -->
+    <div class="scroll-cue">
+      <div class="scroll-line"></div>
+      <span>{ui.hero.scroll}</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FEATURES BENTO ═══════════════════════════════════════ -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-label reveal-up">{ui.features.label}</div>
+      <h2 class="section-h2 reveal-up" style="--delay:60ms">{ui.features.title1}<br/>{ui.features.title2}</h2>
+      <div class="bento-grid">
+
+        <div class="bento-card bento-wide tech-bento reveal-up" style="--delay:100ms">
+          <div class="bento-icon cyan">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 7 16 12 23 17V7Z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          </div>
+          <h3>{ui.features.camTitle}</h3>
+          <p>{ui.features.camDesc}</p>
+          <div class="bento-decoration">
+            <div class="cam-indicator">
+              <span class="cam-dot"></span>
+              <span class="cam-label">REC</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bento-card tech-bento reveal-up" style="--delay:160ms">
+          <div class="bento-icon green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3>{ui.features.uploadTitle}</h3>
+          <p>{ui.features.uploadDesc}</p>
+        </div>
+
+        <div class="bento-card tech-bento reveal-up" style="--delay:200ms">
+          <div class="bento-icon purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.84a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16a2 2 0 0 1 .27.92Z"/></svg>
+          </div>
+          <h3>{ui.features.linkTitle}</h3>
+          <p>{ui.features.linkDesc}</p>
+        </div>
+
+        <div class="bento-card tech-bento reveal-up" style="--delay:240ms">
+          <div class="bento-icon amber">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 2 11 13M22 2 15 22 11 13 2 9l20-7Z"/></svg>
+          </div>
+          <h3>{ui.features.viralTitle}</h3>
+          <p>{ui.features.viralDesc}</p>
+        </div>
+
+        <div class="bento-card bento-wide tech-bento reveal-up" style="--delay:280ms">
+          <div class="bento-icon rose">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          </div>
+          <h3>{ui.features.coverageTitle}</h3>
+          <p>{ui.features.coverageDesc}</p>
+          <div class="coverage-bar-group">
+            <div class="coverage-bar" style="--w:95%; --c:#00f2fe">
+              <span>{ui.features.coverageStat}</span><div class="bar"><div class="bar-fill glow-fill"></div></div><span class="stat-num">95%</span>
+            </div>
+            <div class="coverage-bar" style="--w:100%; --c:#00ff87">
+              <span>{ui.features.uptimeStat}</span><div class="bar"><div class="bar-fill glow-fill"></div></div><span class="stat-num">99.9%</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ HOW IT WORKS ══════════════════════════════════════════ -->
+  <section class="section tech-stripe-bg" id="como-funciona">
+    <div class="container">
+      <div class="section-label reveal-up">{ui.howItWorks.label}</div>
+      <h2 class="section-h2 reveal-up" style="--delay:60ms">{ui.howItWorks.title1}<br/>{ui.howItWorks.title2}</h2>
+
+      <div class="steps-container tech-border">
+        <div class="step-item reveal-up" style="--delay:100ms">
+          <div class="step-number">01</div>
+          <div class="step-body">
+            <h4>{ui.howItWorks.step1Title}</h4>
+            <p>{ui.howItWorks.step1Desc}</p>
+          </div>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="step-item reveal-up" style="--delay:180ms">
+          <div class="step-number">02</div>
+          <div class="step-body">
+            <h4>{ui.howItWorks.step2Title}</h4>
+            <p>{ui.howItWorks.step2Desc}</p>
+          </div>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="step-item reveal-up" style="--delay:260ms">
+          <div class="step-number">03</div>
+          <div class="step-body">
+            <h4>{ui.howItWorks.step3Title}</h4>
+            <p>{ui.howItWorks.step3Desc}</p>
+          </div>
+          <div class="step-arrow final">✓</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SHOWCASE SPLIT ════════════════════════════════════════ -->
+  <section class="section showcase-section">
+    <div class="container">
+      <div class="showcase-split reveal-up">
+
+        <!-- Second phone mockup — the player view -->
+        <div class="showcase-phones">
+          <div class="phone-back-card tech-card">
+            <!-- Stacked UI card behind phone -->
+            <div class="back-card-ui">
+              <div class="bcu-header">
+                <div class="bcu-dot red"></div>
+                <div class="bcu-dot amber"></div>
+                <div class="bcu-dot green"></div>
+                <span style="font-size:11px; color:#4a5568; margin-left:8px;">viewpadel.app/partido/...</span>
+              </div>
+              <div class="bcu-content">
+                <div class="bcu-row">
+                  <div class="bcu-thumb"></div>
+                  <div class="bcu-info">
+                    <div class="bcu-title"></div>
+                    <div class="bcu-sub"></div>
+                  </div>
+                </div>
+                <div class="bcu-bar b1"></div>
+                <div class="bcu-bar b2"></div>
+                <div class="bcu-bar b3" style="width:55%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Front phone (Taller proportions) -->
+          <div class="iphone tall-iphone showcase-iphone tech-border">
+            <div class="iphone-island"></div>
+            <div class="iphone-screen">
+              <div class="iphone-statusbar dark">
+                <span>9:41</span>
+                <div class="sb-icons">
+                  <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><rect x="0" y="3" width="3" height="7" rx="1" fill="white" opacity=".4"/><rect x="4" y="2" width="3" height="8" rx="1" fill="white" opacity=".6"/><rect x="8" y="0" width="3" height="10" rx="1" fill="white" opacity=".8"/><rect x="12" y="0" width="2" height="10" rx="1" fill="white"/></svg>
+                  <svg width="16" height="10" viewBox="0 0 16 10" fill="none"><rect x="0.5" y="0.5" width="13" height="9" rx="2.5" stroke="white" stroke-opacity=".4"/><rect x="1.5" y="1.5" width="9" height="7" rx="1.5" fill="white"/><path d="M14 3.5v3a1.5 1.5 0 0 0 0-3Z" fill="white" opacity=".4"/></svg>
+                </div>
+              </div>
+              <div class="showcase-screen-content">
+                <img src="/asereje-gradient.min.svg" alt="VP" class="ssc-logo glow-effect" />
+                <div class="ssc-label">{ui.showcase.screenStatusReady}</div>
+                <div class="ssc-video-thumb">
+                  <svg viewBox="0 0 200 110" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; border-radius:10px;">
+                    <rect width="200" height="110" fill="#0f2744"/>
+                    <rect x="10" y="10" width="180" height="90" rx="1" fill="#1a3a6b" stroke="#2563eb" stroke-width="0.8" stroke-opacity="0.4"/>
+                    <line x1="100" y1="10" x2="100" y2="100" stroke="#2563eb" stroke-width="0.6" stroke-opacity="0.5"/>
+                    <line x1="10" y1="55" x2="190" y2="55" stroke="#2563eb" stroke-width="0.6" stroke-opacity="0.4"/>
+                    <line x1="100" y1="10" x2="100" y2="100" stroke="#60a5fa" stroke-width="1.5" stroke-opacity="0.8"/>
+                    <circle cx="60" cy="40" r="5" fill="#00ff87" opacity="0.9" style="filter: drop-shadow(0 0 4px #00ff87)"/>
+                    <circle cx="100" cy="55" r="30" fill="white" fill-opacity="0.06" stroke="white" stroke-opacity="0.1"/>
+                    <path d="M94 48 L94 62 L108 55 Z" fill="white" opacity="0.9"/>
+                  </svg>
+                </div>
+                <div class="ssc-match-name">{ui.showcase.screenMatchName}</div>
+                <div class="ssc-date">{ui.showcase.screenMatchDate}</div>
+                <div class="ssc-buttons">
+                  <button class="ssc-btn-primary">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                    {ui.showcase.screenBtnDownload}
+                  </button>
+                  <button class="ssc-btn-ghost">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    {ui.showcase.screenBtnShare}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Copy -->
+        <div class="showcase-copy reveal-up" style="--delay:120ms">
+          <div class="section-label" style="text-align:left; margin-bottom:16px;">{ui.showcase.label}</div>
+          <h2 class="section-h2" style="text-align:left; margin-bottom:20px;">
+            {ui.showcase.title1}<br/>{ui.showcase.title2}<br/>
+            <span class="gradient-text">{ui.showcase.titleHighlight}</span>
+          </h2>
+          <p class="showcase-desc">
+            {ui.showcase.desc}
+          </p>
+          <ul class="showcase-check-list">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              {ui.showcase.check1}
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              {ui.showcase.check2}
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              {ui.showcase.check3}
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              {ui.showcase.check4}
+            </li>
+          </ul>
+          <a href="#busca-tu-partido" class="btn primary glass-glow" style="margin-top:32px;">{ui.showcase.demoCta}</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ SEARCH ════════════════════════════════════════════════ -->
+  <section class="section" id="busca-tu-partido">
+    <div class="container narrow">
+      <div class="search-hero reveal-up">
+        <div class="section-label">{ui.search.label}</div>
+        <h2 class="section-h2">{ui.search.title1}<br/>{ui.search.title2}</h2>
+        <p class="search-desc">{ui.search.desc}</p>
+        <div class="search-card tech-card">
+          <form id="search-form">
+            <div class="search-input-row">
+              <div class="search-icon-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </div>
+              <input
+                id="match-id-input"
+                type="text"
+                placeholder={ui.search.placeholder}
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <button type="submit" class="search-submit-btn glass-glow">{ui.search.btn}</button>
+            </div>
+          </form>
+          <p id="uuid-error" class="uuid-error hidden">{ui.search.error}</p>
+          <p class="search-hint">{ui.search.hint} <code>e29e92a8-f542-4911-b0db-bcf616cc3fdf</code></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PRICING ═══════════════════════════════════════════════ -->
+  <section class="section tech-stripe-bg" id="planes">
+    <div class="container">
+      <div class="section-label reveal-up">{ui.pricing.label}</div>
+      <h2 class="section-h2 reveal-up" style="--delay:60ms">{ui.pricing.title1}<br/>{ui.pricing.title2}</h2>
+      <p class="pricing-sub reveal-up" style="--delay:100ms">{ui.pricing.sub}</p>
+
+      <div class="pricing-grid">
+
+        <!-- Básico -->
+        <div class="plan-card tech-card reveal-up" style="--delay:120ms">
+          <div class="plan-tier">{ui.pricing.basicTitle}</div>
+          <div class="plan-price-block">
+            <span class="plan-price">{ui.pricing.basicPrice}</span>
+          </div>
+          <p class="plan-tagline">{ui.pricing.basicDesc}</p>
+          <ul class="plan-feats">
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Hasta 2 canchas</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Grabación HD 720p</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Subida automática</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Links activos 7 días</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Soporte por WhatsApp</li>
+          </ul>
+          <a href="https://wa.me/5493564575862?text=Hola!%20Quiero%20info%20sobre%20el%20Plan%20Basico%20de%20ViewPadel." target="_blank" rel="noopener" class="plan-btn ghost">Consultar →</a>
+        </div>
+
+        <!-- Pro -->
+        <div class="plan-card plan-featured tech-card reveal-up" style="--delay:200ms">
+          <div class="plan-featured-badge glass-glow">{ui.pricing.proBadge}</div>
+          <div class="plan-tier featured">{ui.pricing.proTitle}</div>
+          <div class="plan-price-block">
+            <span class="plan-price featured">{ui.pricing.proPrice}</span>
+          </div>
+          <p class="plan-tagline">{ui.pricing.proDesc}</p>
+          <ul class="plan-feats">
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Hasta 5 canchas</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Grabación Full HD 1080p</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Links ultra rápidos</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Links activos 14 días</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Marca de agua con tu logo</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00ff87" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Soporte prioritario</li>
+          </ul>
+          <a href="https://wa.me/5493564575862?text=Hola!%20Quiero%20info%20sobre%20el%20Plan%20Pro%20de%20ViewPadel." target="_blank" rel="noopener" class="plan-btn primary glass-glow">Contratar ahora →</a>
+        </div>
+
+        <!-- Elite -->
+        <div class="plan-card tech-card reveal-up" style="--delay:280ms">
+          <div class="plan-tier">{ui.pricing.eliteTitle}</div>
+          <div class="plan-price-block">
+            <span class="plan-price">{ui.pricing.elitePrice}</span>
+          </div>
+          <p class="plan-tagline">{ui.pricing.eliteDesc}</p>
+          <ul class="plan-feats">
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Canchas ilimitadas</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Máxima definición</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Links activos 30 días</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Estadísticas mensuales</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Página de marca propia</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f2fe" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Soporte 24/7 dedicado</li>
+          </ul>
+          <a href="https://wa.me/5493564575862?text=Hola!%20Quiero%20info%20sobre%20el%20Plan%20Elite%20de%20ViewPadel." target="_blank" rel="noopener" class="plan-btn ghost">Consultar →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CTA FINAL ══════════════════════════════════════════════ -->
+  <section class="cta-final" id="soporte">
+    <div class="cta-final-inner reveal-up">
+      <img src="/asereje-gradient.min.svg" alt="VP" class="cta-logo-large glow-effect" />
+      <div class="section-label" style="color:var(--cyan);">{ui.cta.label}</div>
+      <h2 class="cta-h2">{ui.cta.title1}<br/><span class="gradient-text">{ui.cta.titleHighlight}</span></h2>
+      <p class="cta-body">{ui.cta.body}</p>
+      <a
+        href="https://wa.me/5493564575862?text=Hola!%20Me%20interesa%20ViewPadel%20para%20mi%20club."
+        target="_blank" rel="noopener"
+        class="btn primary large glass-glow"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
+        {ui.cta.btn}
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="/asereje-gradient.min.svg" alt="VP" class="logo-img sm glow-effect" />
+        <span class="logo-text sm">ViewPadel</span>
+      </div>
+      <p class="footer-copy">© {new Date().getFullYear()} ViewPadel · {ui.footer.copy}</p>
+      <nav class="footer-nav">
+        <a href="#features">{ui.footer.navSystem}</a>
+        <a href="#como-funciona">{ui.footer.navHow}</a>
+        <a href="#planes">{ui.footer.navPlans}</a>
+      </nav>
+    </div>
+  </footer>
+
 </Layout>
 
+<!-- ══════════════════════ Scripts ═══════════════════════════════════════════ -->
 <script is:inline>
-  // Handle redirect to match details on form submit
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('search-form');
-    const input = document.getElementById('match-id-input');
-    const errorMsg = document.getElementById('error-message');
-
-    if (form && input) {
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const rawValue = input.value.trim();
-        
-        // Simple UUID regex validation
-        const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-        
-        if (uuidRegex.test(rawValue)) {
-          errorMsg?.classList.add('hidden');
-          window.location.href = `/partido/${rawValue}`;
-        } else {
-          errorMsg?.classList.remove('hidden');
+(function () {
+  // ── Reveal on scroll ────────────────────────────────────────────────────
+  function initReveal() {
+    var els = document.querySelectorAll('.reveal-up');
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) {
+          var delay = parseInt(e.target.style.getPropertyValue('--delay')) || 0;
+          setTimeout(function(){ e.target.classList.add('is-visible'); }, delay);
+          io.unobserve(e.target);
         }
       });
-    }
-  });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el){ io.observe(el); });
+  }
+
+  // ── UUID search ─────────────────────────────────────────────────────────
+  function initSearch() {
+    var form  = document.getElementById('search-form');
+    var input = document.getElementById('match-id-input');
+    var err   = document.getElementById('uuid-error');
+    if (!form) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var v = (input.value || '').trim();
+      var ok = /^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$/.test(v);
+      if (ok) {
+        if (err) err.classList.add('hidden');
+        window.location.href = '/partido/' + v;
+      } else {
+        if (err) err.classList.remove('hidden');
+        input.focus();
+      }
+    });
+  }
+
+  // ── Burger menu ─────────────────────────────────────────────────────────
+  function initBurger() {
+    var btn = document.getElementById('burger');
+    var nav = document.getElementById('mobile-nav');
+    if (!btn || !nav) return;
+    btn.addEventListener('click', function(){
+      btn.classList.toggle('open');
+      nav.classList.toggle('open');
+    });
+    nav.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){
+        btn.classList.remove('open');
+        nav.classList.remove('open');
+      });
+    });
+  }
+
+  // ── Header shrink on scroll ─────────────────────────────────────────────
+  function initHeaderScroll() {
+    var hdr = document.querySelector('.site-header');
+    if (!hdr) return;
+    window.addEventListener('scroll', function(){
+      hdr.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+  }
+
+  // ── Boot ────────────────────────────────────────────────────────────────
+  function boot() {
+    initReveal();
+    initSearch();
+    initBurger();
+    initHeaderScroll();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else { boot(); }
+})();
 </script>
 
+<!-- ══════════════════════ Styles ════════════════════════════════════════════ -->
 <style>
-  .landing-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background: radial-gradient(circle at top left, #12213a 0%, #07090f 70%);
-    color: #f8fafc;
-    font-family: 'Outfit', sans-serif;
+  /* ═══ TOKENS ════════════════════════════════════════════════════════════ */
+  :root {
+    --cyan:   #00f2fe;
+    --green:  #00ff87;
+    --bg:     #0d1117;
+    --surface:#0f1923;
+    --border: rgba(255,255,255,0.07);
+    --text:   #f0f6fc;
+    --muted:  #cbd5e1;
+    --radius: 20px;
+    --font-heading: 'Outfit', system-ui, sans-serif;
   }
 
-  .web-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px 40px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  html { scroll-behavior: smooth; }
+
+  /* ═══ BACKGROUND ════════════════════════════════════════════════════════ */
+  .page-bg {
+    position: fixed; inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    background-color: var(--bg);
+  }
+  .bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.22;
+  }
+  .orb-1 {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, var(--cyan) 0%, transparent 70%);
+    top: -200px; right: -100px;
+    animation: orb-drift 18s ease-in-out infinite alternate;
+  }
+  .orb-2 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, var(--green) 0%, transparent 70%);
+    bottom: 10%; left: -100px;
+    animation: orb-drift 24s ease-in-out infinite alternate-reverse;
+  }
+  .orb-3 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #38bdf8 0%, transparent 70%);
+    top: 40%; left: 40%;
+    animation: orb-drift 30s ease-in-out infinite alternate;
+    opacity: 0.12;
+  }
+  @keyframes orb-drift {
+    0%  { transform: translate(0, 0) scale(1); }
+    100%{ transform: translate(60px, -40px) scale(1.12); }
   }
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  /* Abstract tech court background */
+  .court-lines {
+    position: absolute; inset: 0; opacity: 0.05;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .court-line { background: #fff; position: absolute; }
+  .court-line.vertical { width: 2px; height: 100vh; left: 50%; }
+  .court-line.horizontal { width: 100vw; height: 2px; top: 75%; }
+
+  .grid-lines {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
   }
 
-  .logo-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
-  }
-
-  .logo-text h1 {
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 1.1;
-    margin: 0;
-  }
-
-  .logo-text span {
-    font-size: 12px;
-    color: #94a3b8;
-    letter-spacing: 0.5px;
-  }
-
-  .hero-section {
-    flex-grow: 1;
-    max-width: 1000px;
-    width: 100%;
+  /* ═══ LAYOUT ════════════════════════════════════════════════════════════ */
+  .container {
+    max-width: 1160px;
     margin: 0 auto;
-    padding: 60px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 48px;
-    text-align: center;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .container.narrow { max-width: 680px; }
+
+  /* ═══ REVEAL ════════════════════════════════════════════════════════════ */
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity .85s cubic-bezier(.16,1,.3,1), transform .85s cubic-bezier(.16,1,.3,1);
+  }
+  .reveal-up.is-visible { opacity: 1; transform: translateY(0); }
+
+  /* ═══ GLASS & TECH UTILS ════════════════════════════════════════════════ */
+  .tech-border {
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .glass-glow {
+    box-shadow: 0 0 24px rgba(0,242,254,0.15);
+  }
+  .tech-stripe-bg {
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(255,255,255,0.015) 10px,
+      rgba(255,255,255,0.015) 11px
+    );
   }
 
+  /* ═══ HEADER ════════════════════════════════════════════════════════════ */
+  .site-header {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(13,17,23,0.4);
+    backdrop-filter: blur(24px) saturate(160%);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s, background .3s;
+  }
+  .site-header.scrolled {
+    background: rgba(13,17,23,0.9);
+    border-bottom-color: var(--border);
+  }
+  .header-inner {
+    max-width: 1160px; margin: 0 auto;
+    padding: 0 24px; height: 72px;
+    display: flex; align-items: center; gap: 32px;
+  }
+  .logo-link {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none; flex-shrink: 0;
+  }
+  
+  .logo-img {
+    width: 36px; height: 36px; display: block;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
+    transition: transform .7s cubic-bezier(.175,.885,.32,1.275), filter .3s;
+  }
+  .logo-img.sm { width: 28px; height: 28px; }
+  .logo-link:hover .logo-img { 
+    transform: rotate(360deg); 
+    filter: drop-shadow(0 0 12px var(--cyan)); 
+  }
+
+  .logo-text {
+    font-size: 19px; font-weight: 800; letter-spacing: -.3px;
+    color: var(--text); font-family: var(--font-heading);
+  }
+  .logo-text.sm { font-size: 15px; }
+
+  .desktop-nav {
+    display: flex; gap: 32px; margin-left: auto;
+  }
+  .desktop-nav a {
+    font-size: 14px; font-weight: 600; color: var(--muted);
+    text-decoration: none; transition: color .2s;
+    letter-spacing: 0.3px;
+  }
+  .desktop-nav a:hover { color: var(--text); }
+
+  .header-cta {
+    display: inline-flex; align-items: center;
+    padding: 10px 20px; border-radius: 12px;
+    background: rgba(0,242,254,.1);
+    border: 1px solid rgba(0,242,254,.3);
+    color: var(--cyan); font-size: 13px; font-weight: 700;
+    text-decoration: none; white-space: nowrap;
+    transition: background .2s, box-shadow .2s;
+  }
+  .header-cta:hover {
+    background: rgba(0,242,254,.15);
+    box-shadow: 0 0 24px rgba(0,242,254,.3);
+  }
+
+  .burger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px; margin-left: auto;
+  }
+  .burger span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all .28s; }
+  .burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; }
+  .burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-nav {
+    display: none; flex-direction: column;
+    background: rgba(13,17,23,.98); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-nav.open { display: flex; }
+  .mob-link {
+    padding: 16px 24px; font-size: 16px; font-weight: 600;
+    color: #cbd5e1; text-decoration: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .mob-link:last-child { border-bottom: none; }
+
+  /* ═══ HERO ══════════════════════════════════════════════════════════════ */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 24px;
+  }
   .hero-content {
-    max-width: 700px;
+    max-width: 1160px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px; align-items: center;
   }
 
-  .pill-badge {
-    background-color: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    color: #10b981;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-    display: inline-block;
-    margin-bottom: 18px;
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 16px; border-radius: 99px;
+    background: rgba(0,242,254,.08);
+    border: 1px solid rgba(0,242,254,.3);
+    font-size: 12px; font-weight: 700; color: var(--cyan);
+    letter-spacing: .5px; margin-bottom: 32px;
+    box-shadow: 0 0 20px rgba(0,242,254,0.1);
+  }
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity: 1; } 50% { opacity: .3; }
   }
 
-  .hero-content h1 {
-    font-size: 42px;
-    font-weight: 800;
-    line-height: 1.15;
-    margin-bottom: 16px;
-    letter-spacing: -1px;
-    background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .hero-h1 {
+    font-size: clamp(44px, 5.8vw, 82px);
+    font-weight: 800; line-height: 1.05; letter-spacing: -2.5px;
+    color: var(--text); margin: 0 0 28px;
+    font-family: var(--font-heading);
+  }
+  .gradient-text {
+    background: linear-gradient(135deg, var(--cyan) 0%, var(--green) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
 
-  .hero-description {
-    font-size: 17px;
-    color: #94a3b8;
-    line-height: 1.6;
-    margin-bottom: 32px;
+  .hero-sub {
+    font-size: clamp(16px, 1.6vw, 18px);
+    color: var(--muted); line-height: 1.7;
+    max-width: 520px; margin: 0 0 40px;
+    font-weight: 400;
   }
 
-  /* Search Box */
-  .search-card {
-    background-color: rgba(22, 29, 49, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
-    padding: 32px;
-    text-align: left;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(16px);
+  .hero-actions {
+    display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 56px;
   }
 
-  .search-card h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 6px;
+  .trust-row {
+    display: flex; align-items: center; gap: 24px;
+  }
+  .trust-item {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .trust-item strong {
+    font-size: 26px; font-weight: 800; color: var(--text);
+    line-height: 1; font-family: var(--font-heading);
+  }
+  .trust-item span { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
+  .trust-divider {
+    width: 2px; height: 36px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
   }
 
-  .search-hint {
-    font-size: 13px;
-    color: #64748b;
-    margin-bottom: 20px;
+  /* ─── Phone visual (Taller, 19.5:9 proportion) ──────────────────────── */
+  .hero-visual { display: flex; justify-content: flex-end; }
+
+  .tall-phone-wrap {
+    position: relative; display: flex; justify-content: center; padding: 20px;
   }
 
-  .search-form {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 12px;
+  .phone-glow {
+    position: absolute; border-radius: 50%; filter: blur(60px);
+    pointer-events: none;
+  }
+  .glow-a {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0,242,254,.25), transparent 70%);
+    top: -30px; right: -10px;
+    animation: glow-pulse 4s ease-in-out infinite alternate;
+  }
+  .glow-b {
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(0,255,135,.18), transparent 70%);
+    bottom: -20px; left: 10px;
+    animation: glow-pulse 5s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes glow-pulse {
+    0%  { opacity: .6; transform: scale(1); }
+    100%{ opacity: 1;  transform: scale(1.1); }
   }
 
-  .search-form input {
-    background-color: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    padding: 14px 18px;
-    font-size: 14px;
-    color: #fff;
-    width: 100%;
-    min-width: 0; /* Prevents overflow in grid/flex */
-    text-overflow: ellipsis;
-    transition: all 0.2s;
+  /* Taller iPhone (width: 280, height: 600) */
+  .tall-iphone {
+    width: 280px; height: 600px;
+    background: #090d14;
+    border-radius: 44px;
+    border: 10px solid rgba(255,255,255,0.08);
+    outline: 1px solid rgba(255,255,255,0.05);
+    box-shadow:
+      0 60px 120px rgba(0,0,0,0.8),
+      inset 0 0 0 1px rgba(255,255,255,0.03);
+    overflow: hidden;
+    position: relative;
+    animation: phone-float 6s ease-in-out infinite;
+    flex-shrink: 0;
+    display: flex; flex-direction: column;
+  }
+  @keyframes phone-float {
+    0%, 100%  { transform: translateY(0); }
+    50% { transform: translateY(-16px); }
   }
 
-  .search-form input:focus {
-    border-color: #10b981;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+  .iphone-island {
+    width: 96px; height: 26px; background: #000;
+    border-radius: 0 0 18px 18px; margin: 0 auto 0;
+    position: absolute; left: 50%; transform: translateX(-50%); z-index: 10;
   }
 
-  .error-msg {
-    color: #ef4444;
-    font-size: 13px;
-    margin-top: 8px;
-    font-weight: 500;
+  .iphone-screen { 
+    flex: 1; display: flex; flex-direction: column; 
+    padding-top: 26px; /* Space for island */
   }
 
-  .hidden {
-    display: none;
+  .iphone-statusbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 16px 8px; font-size: 11px; font-weight: 700; color: #fff;
+    margin-top: -18px; /* Pull up beside island */
   }
+  .sb-icons { display: flex; align-items: center; gap: 5px; }
 
-  /* Feature Grid */
-  .feature-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    width: 100%;
+  .iphone-app-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    background: rgba(255,255,255,0.02);
   }
-
-  .feature-card {
-    background-color: rgba(22, 29, 49, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    border-radius: 18px;
-    padding: 24px;
-    text-align: left;
-    transition: all 0.2s;
+  .app-logo-small {
+    width: 24px; height: 24px; flex-shrink: 0;
   }
+  .app-title { font-size: 14px; font-weight: 800; color: #fff; flex: 1; font-family: var(--font-heading);}
+  .app-share { color: rgba(255,255,255,.6); }
 
-  .feature-card:hover {
-    background-color: rgba(22, 29, 49, 0.45);
-    border-color: rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
-  }
-
-  .feature-icon {
-    font-size: 28px;
-    margin-bottom: 12px;
-  }
-
-  .feature-card h3 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  .feature-card p {
-    font-size: 13px;
-    color: #94a3b8;
-    line-height: 1.5;
-  }
-
-  /* Buttons */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
+  .iphone-player { position: relative; }
+  .player-court-bg { position: relative; overflow: hidden; background: #0b172a;}
+  .court-svg { display: block; width: 100%; }
+  
+  .tech-play {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(0,242,254,0.15);
+    backdrop-filter: blur(8px);
+    border: 2px solid rgba(0,242,254,0.4);
+    color: var(--cyan); font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    border: none;
-    transition: all 0.2s;
+    box-shadow: 0 0 20px rgba(0,242,254,0.3);
+    transition: transform .2s, background .2s, box-shadow .2s;
+  }
+  .tech-play:hover { 
+    transform: translate(-50%,-50%) scale(1.1); 
+    background: rgba(0,242,254,0.25); 
+    box-shadow: 0 0 30px rgba(0,242,254,0.5);
   }
 
-  .btn-primary {
-    background-color: #10b981;
-    color: #fff;
-    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  .rec-badge {
+    position: absolute; top: 12px; left: 12px;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(0,0,0,.7); backdrop-filter: blur(8px);
+    border-radius: 6px; padding: 4px 10px;
+    font-size: 9px; font-weight: 800; color: #fff; letter-spacing: 1px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .rec-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #ef4444;
+    animation: blink 1.2s ease-in-out infinite;
+    box-shadow: 0 0 6px #ef4444;
   }
 
-  .btn-primary:hover {
-    background-color: #059669;
+  .player-progress {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 10px 14px 8px;
+    background: linear-gradient(transparent, rgba(0,0,0,.8));
+  }
+  .progress-bar {
+    height: 4px; background: rgba(255,255,255,.2); border-radius: 4px;
+    margin-bottom: 6px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; width: 38%;
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+    border-radius: 4px;
+    box-shadow: 0 0 10px var(--cyan);
+  }
+  .progress-times {
+    display: flex; justify-content: space-between;
+    font-size: 10px; color: rgba(255,255,255,.7); font-weight: 600;
   }
 
-  .web-footer {
+  .iphone-info-card {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px;
+    background: #060a0f;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .info-court-tag {
+    display: inline-block; font-size: 9px; font-weight: 800;
+    padding: 3px 8px; border-radius: 4px;
+    background: rgba(0,255,135,.15); border: 1px solid rgba(0,255,135,.3); color: var(--green);
+    margin-bottom: 6px; letter-spacing: 0.5px;
+  }
+  .info-match-name { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+  .info-date { font-size: 11px; color: rgba(255,255,255,.5); font-weight: 500;}
+  .info-actions { display: flex; gap: 8px; }
+  .info-action-btn {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .info-action-btn.download { background: rgba(0,242,254,.15); border: 1px solid rgba(0,242,254,.3); color: var(--cyan); }
+  .info-action-btn.share    { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.7); }
+
+  .iphone-spacer { flex: 1; } /* Pushes notification to the bottom */
+
+  .iphone-notif {
+    display: flex; align-items: center; gap: 10px;
+    margin: 12px; border-radius: 14px;
+    background: rgba(20,25,35,.85); backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.12);
+    padding: 12px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.5);
+    animation: notif-slide-in 1s 2s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes notif-slide-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .notif-app-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: #075e54; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .notif-title { font-size: 11px; font-weight: 800; color: #fff; margin-bottom: 2px; }
+  .notif-body  { font-size: 11px; color: rgba(255,255,255,.7); font-weight: 500;}
+  .notif-time  { font-size: 10px; color: rgba(255,255,255,.4); font-weight: 600;}
+
+  /* Floating badges */
+  .float-badge {
+    position: absolute;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 30px;
+    font-size: 12px; font-weight: 800; color: #fff;
+    background: rgba(15,25,35,.9); backdrop-filter: blur(12px);
+    box-shadow: 0 12px 32px rgba(0,0,0,.5);
+    white-space: nowrap; letter-spacing: 0.5px;
+  }
+  .badge-hd {
+    top: 80px; left: -30px;
+    animation: badge-float 5s ease-in-out infinite;
+    color: var(--cyan); border-color: rgba(0,242,254,0.2);
+  }
+  .badge-auto {
+    top: 45%;  right: -24px;
+    animation: badge-float 4s 1s ease-in-out infinite;
+    color: var(--green); border-color: rgba(0,255,135,0.2);
+  }
+  .badge-wp {
+    bottom: 100px; left: -30px;
+    animation: badge-float 6s 2s ease-in-out infinite;
+  }
+  @keyframes badge-float {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-8px); }
+  }
+
+  .scroll-cue {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    color: var(--muted); font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+    animation: fade-in 2s 1.5s both;
+  }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  .scroll-line {
+    width: 2px; height: 40px; border-radius: 2px;
+    background: linear-gradient(to bottom, transparent, var(--cyan));
+    animation: scroll-grow 2s 1.5s ease-in-out infinite;
+  }
+  @keyframes scroll-grow {
+    0%   { height: 20px; opacity: .4; }
+    100% { height: 40px; opacity: 1; }
+  }
+
+  /* ═══ SECTIONS ══════════════════════════════════════════════════════════ */
+  .section {
+    position: relative; z-index: 1;
+    padding: clamp(100px, 12vw, 180px) 0;
+  }
+
+  .section-label {
+    font-size: 12px; font-weight: 800; letter-spacing: 2.5px;
+    color: var(--cyan); text-shadow: 0 0 12px rgba(0,242,254,.4);
+    margin-bottom: 20px; text-transform: uppercase;
     text-align: center;
-    padding: 24px;
-    font-size: 13px;
-    color: #64748b;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    background-color: rgba(11, 15, 25, 0.2);
+  }
+
+  .section-h2 {
+    font-size: clamp(32px, 4.5vw, 60px);
+    font-weight: 800; letter-spacing: -2px; line-height: 1.05;
+    color: var(--text); text-align: center;
+    margin: 0 0 72px; font-family: var(--font-heading);
+  }
+
+  /* ═══ BENTO ═════════════════════════════════════════════════════════════ */
+  .tech-bento {
+    background: rgba(13,17,23,.5);
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 10px 30px rgba(0,0,0,0.3);
+  }
+  
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto;
+    gap: 20px;
+  }
+  .bento-card {
+    border-radius: 24px;
+    padding: 36px 32px;
+    backdrop-filter: blur(16px);
+    transition: transform .3s, border-color .3s, box-shadow .3s;
+    position: relative; overflow: hidden;
+  }
+  .bento-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 100% 70% at 50% 0%, rgba(255,255,255,.04), transparent);
+    pointer-events: none;
+  }
+  .bento-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,255,255,.15);
+    box-shadow: 0 24px 48px rgba(0,0,0,.5);
+  }
+  .bento-wide { grid-column: span 2; }
+
+  .bento-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .bento-icon.cyan  { background: rgba(0,242,254,.15);  color: var(--cyan);  border: 1px solid rgba(0,242,254,.3); box-shadow: 0 0 16px rgba(0,242,254,.15); }
+  .bento-icon.green { background: rgba(0,255,135,.15);  color: var(--green); border: 1px solid rgba(0,255,135,.3); box-shadow: 0 0 16px rgba(0,255,135,.15); }
+  .bento-icon.purple{ background: rgba(168,85,247,.15); color: #a855f7;      border: 1px solid rgba(168,85,247,.3); }
+  .bento-icon.amber { background: rgba(251,191,36,.15); color: #fbbf24;      border: 1px solid rgba(251,191,36,.3); }
+  .bento-icon.rose  { background: rgba(244,63,94,.15);  color: #f43f5e;      border: 1px solid rgba(244,63,94,.3); }
+
+  .bento-card h3 { font-size: 20px; font-weight: 800; margin: 0 0 12px; font-family: var(--font-heading); color: var(--text); }
+  .bento-card p  { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0; font-weight: 500;}
+
+  .bento-decoration { margin-top: 28px; }
+  .cam-indicator {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border-radius: 20px;
+    background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.3);
+    font-size: 11px; font-weight: 800; color: #ef4444; letter-spacing: 1px;
+    box-shadow: 0 0 12px rgba(239,68,68,0.2);
+  }
+  .cam-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; animation: blink 1.2s infinite; box-shadow: 0 0 8px #ef4444;}
+
+  .coverage-bar-group { margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+  .coverage-bar {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12px; color: rgba(255,255,255,0.7); font-weight: 700;
+  }
+  .coverage-bar .bar {
+    flex: 1; height: 6px; background: rgba(255,255,255,.06); border-radius: 6px; overflow: hidden;
+  }
+  .coverage-bar .bar-fill {
+    height: 100%; width: var(--w);
+    background: var(--c);
+    border-radius: 6px;
+  }
+  .glow-fill { box-shadow: 0 0 12px var(--c); }
+  .stat-num { color: #fff; font-weight: 800; }
+
+  /* ═══ STEPS ═════════════════════════════════════════════════════════════ */
+  .steps-container {
+    display: flex; gap: 0;
+    background: rgba(13,17,23,.5);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+  .step-item {
+    flex: 1; padding: 56px 40px;
+    display: flex; flex-direction: column; gap: 20px;
+    position: relative;
+    transition: background .3s;
+  }
+  .step-item:hover { background: rgba(0,242,254,.03); }
+  .step-item + .step-item { border-left: 1px solid rgba(255,255,255,0.06); }
+
+  .step-number {
+    font-size: 56px; font-weight: 900; letter-spacing: -2.5px;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    line-height: 1; font-family: var(--font-heading);
+    opacity: 0.9;
+  }
+  .step-body h4 { font-size: 20px; font-weight: 800; margin: 0 0 10px; font-family: var(--font-heading);}
+  .step-body p  { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0; font-weight: 500;}
+  .step-arrow {
+    position: absolute; right: 24px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px; color: rgba(255,255,255,.1); font-weight: 300;
+  }
+  .step-arrow.final { color: var(--green); opacity: 0.5;}
+
+  /* ═══ SHOWCASE ══════════════════════════════════════════════════════════ */
+  .showcase-section { background: none; }
+  .showcase-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+
+  .showcase-phones {
+    position: relative;
+    display: flex; justify-content: center;
+    padding: 40px 24px;
+  }
+
+  .tech-card {
+    background: rgba(13,17,23,.6);
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 20px 40px rgba(0,0,0,0.5);
+  }
+
+  .phone-back-card {
+    position: absolute;
+    top: 24px; left: 0;
+    width: 260px;
+    border-radius: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+  }
+  .bcu-header {
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 14px;
+    background: rgba(0,0,0,.3);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .bcu-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .bcu-dot.red   { background: #ef4444; }
+  .bcu-dot.amber { background: #f59e0b; }
+  .bcu-dot.green { background: #22c55e; }
+  .bcu-content { padding: 20px; }
+  .bcu-row { display: flex; gap: 12px; margin-bottom: 20px; }
+  .bcu-thumb { width: 48px; height: 48px; background: rgba(0,242,254,.15); border-radius: 10px; flex-shrink: 0; border: 1px solid rgba(0,242,254,0.3);}
+  .bcu-info { flex: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+  .bcu-title { height: 10px; background: rgba(255,255,255,.2); border-radius: 5px; }
+  .bcu-sub   { height: 8px; background: rgba(255,255,255,.1); border-radius: 4px; width: 70%; }
+  .bcu-bar { height: 6px; background: rgba(255,255,255,.08); border-radius: 4px; margin-bottom: 10px; }
+  .bcu-bar.b1 { width: 100%; }
+  .bcu-bar.b2 { width: 85%; }
+  .bcu-bar.b3 { width: 60%; margin-bottom: 0; }
+
+  /* Taller showcase phone */
+  .showcase-iphone {
+    position: relative; z-index: 1;
+    width: 260px; height: 560px; /* Taller */
+    animation: phone-float 6s 1s ease-in-out infinite;
+  }
+
+  .showcase-screen-content {
+    padding: 20px 16px 24px;
+    background: #060a0f;
+    flex: 1; display: flex; flex-direction: column;
+  }
+  .ssc-logo {
+    width: 32px; height: 32px; margin: 0 auto 12px;
+  }
+  .ssc-label { text-align: center; font-size: 12px; font-weight: 800; color: var(--green); margin-bottom: 14px; letter-spacing: 0.5px;}
+  .ssc-video-thumb {
+    width: 100%; aspect-ratio: 16/9; border-radius: 12px;
+    overflow: hidden; margin-bottom: 16px;
+    background: #0b172a;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .ssc-match-name { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+  .ssc-date { font-size: 11px; color: rgba(255,255,255,.5); margin-bottom: 20px; font-weight: 500;}
+  .ssc-buttons { display: flex; gap: 10px; margin-top: auto; }
+  .ssc-btn-primary {
+    flex: 1; padding: 10px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    color: #06090e; font-size: 12px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    border: none; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,242,254,0.3);
+  }
+  .ssc-btn-ghost {
+    flex: 1; padding: 10px; border-radius: 10px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+    color: rgba(255,255,255,.8); font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    cursor: pointer;
+  }
+
+  .showcase-copy .section-h2 { margin-bottom: 24px; }
+  .showcase-desc {
+    font-size: 16px; color: var(--muted); line-height: 1.7;
+    margin: 0 0 32px; font-weight: 500;
+  }
+  .showcase-check-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .showcase-check-list li {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 15px; color: #cbd5e1; font-weight: 600;
+  }
+
+  /* ═══ SEARCH ════════════════════════════════════════════════════════════ */
+  .search-hero { text-align: center; }
+  .search-desc {
+    font-size: 17px; color: var(--muted); line-height: 1.65;
+    margin: 0 0 40px; font-weight: 500;
+  }
+  .search-card {
+    border-radius: 28px;
+    padding: 40px;
+    backdrop-filter: blur(20px);
+  }
+  .search-input-row {
+    display: flex; align-items: center;
+    background: rgba(0,0,0,.4);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 16px;
+    padding: 6px 6px 6px 18px;
+    gap: 12px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .search-input-row:focus-within {
+    border-color: rgba(0,242,254,.5);
+    box-shadow: 0 0 0 4px rgba(0,242,254,.15);
+  }
+  .search-icon-wrap { flex-shrink: 0; line-height: 0; }
+  .search-input-row input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--text); font-size: 15px; padding: 12px 0;
+    font-family: 'Outfit', monospace; font-weight: 500;
+  }
+  .search-input-row input::placeholder { color: #4a5a75; }
+  .search-submit-btn {
+    padding: 12px 24px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    color: #06090e; font-size: 15px; font-weight: 800;
+    border: none; cursor: pointer; white-space: nowrap;
+    transition: opacity .2s, transform .2s;
+    font-family: inherit;
+  }
+  .search-submit-btn:hover { opacity: .9; transform: translateY(-2px); }
+  .uuid-error { margin-top: 14px; font-size: 14px; color: #f43f5e; font-weight: 600; }
+  .hidden { display: none; }
+  .search-hint { margin-top: 16px; font-size: 13px; color: var(--muted); font-weight: 500; }
+  .search-hint code {
+    font-family: monospace; font-size: 12px;
+    color: rgba(255,255,255,.6);
+    background: rgba(255,255,255,.08);
+    padding: 2px 6px; border-radius: 6px;
+  }
+
+  /* ═══ PRICING ═══════════════════════════════════════════════════════════ */
+  .pricing-sub {
+    text-align: center; font-size: 17px; color: var(--muted);
+    margin: -52px 0 60px; font-weight: 500;
+  }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; align-items: start;
+  }
+  .plan-card {
+    border-radius: 28px; padding: 40px 32px;
+    backdrop-filter: blur(16px);
+    display: flex; flex-direction: column; gap: 0;
+    position: relative;
+    transition: transform .3s, box-shadow .3s;
+  }
+  .plan-card:hover { transform: translateY(-6px); box-shadow: 0 32px 64px rgba(0,0,0,.5); }
+
+  .plan-featured {
+    border: 2px solid rgba(0,255,135,.5);
+    background: linear-gradient(155deg, rgba(13,17,23,.7), rgba(6,9,14,.5));
+    box-shadow: 0 0 40px rgba(0,255,135,0.1);
+  }
+  .plan-featured-badge {
+    position: absolute; top: -14px; left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, var(--cyan), var(--green));
+    color: #06090e; font-size: 11px; font-weight: 900;
+    padding: 6px 20px; border-radius: 30px;
+    letter-spacing: .8px; white-space: nowrap;
+  }
+  .plan-tier { font-size: 16px; font-weight: 800; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-heading);}
+  .plan-tier.featured { color: var(--green); }
+  .plan-price { font-size: 36px; font-weight: 900; color: var(--text); display: block; margin-bottom: 12px; font-family: var(--font-heading);}
+  .plan-price.featured {
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .plan-tagline { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0 0 32px; font-weight: 500;}
+  .plan-feats {
+    list-style: none; padding: 0; margin: 0 0 40px; flex: 1;
+  }
+  .plan-feats li {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px; color: #cbd5e1; padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05); font-weight: 500;
+  }
+  .plan-feats li:last-child { border-bottom: none; }
+
+  .plan-btn {
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px; border-radius: 14px;
+    font-size: 15px; font-weight: 800;
+    text-decoration: none; transition: all .2s;
+    border: none; font-family: inherit;
+  }
+  .plan-btn.primary {
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    color: #06090e;
+  }
+  .plan-btn.primary:hover { transform: translateY(-2px); }
+  .plan-btn.ghost {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    color: var(--text);
+  }
+  .plan-btn.ghost:hover { background: rgba(255,255,255,.14); }
+
+  /* ═══ CTA FINAL ═════════════════════════════════════════════════════════ */
+  .cta-final {
+    position: relative; z-index: 1;
+    padding: clamp(120px, 16vw, 240px) 24px;
+    text-align: center;
+  }
+  .cta-final-inner { max-width: 660px; margin: 0 auto; }
+  .cta-logo-large {
+    width: 80px; height: 80px;
+    margin: 0 auto 32px;
+    animation: logo-spin-in 1.8s cubic-bezier(.19,1,.22,1) both;
+  }
+  .cta-h2 {
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 900; letter-spacing: -2px; line-height: 1.1;
+    color: var(--text); margin: 12px 0 24px; font-family: var(--font-heading);
+  }
+  .cta-body { font-size: 18px; color: var(--muted); line-height: 1.6; margin: 0 0 40px; font-weight: 500; }
+
+  /* ═══ BUTTONS ═══════════════════════════════════════════════════════════ */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 16px 32px; border-radius: 16px;
+    font-size: 16px; font-weight: 800;
+    text-decoration: none; border: none; cursor: pointer;
+    font-family: inherit;
+    transition: transform .2s, box-shadow .2s, background .2s;
+  }
+  .btn.primary {
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    color: #06090e;
+  }
+  .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(0,242,254,.4); }
+  .btn.ghost {
+    background: rgba(255,255,255,.08);
+    color: var(--text);
+  }
+  .btn.ghost:hover { background: rgba(255,255,255,.15); transform: translateY(-1px); }
+  .btn.large { padding: 20px 48px; font-size: 18px; border-radius: 18px; }
+
+  /* ═══ FOOTER ════════════════════════════════════════════════════════════ */
+  .site-footer {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    background: rgba(6,9,14,.8);
+    padding: 32px 24px; position: relative; z-index: 1;
+  }
+  .footer-inner {
+    max-width: 1160px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .footer-brand { display: flex; align-items: center; gap: 10px; }
+  .footer-copy { font-size: 14px; color: var(--muted); font-weight: 500;}
+  .footer-nav { display: flex; gap: 24px; }
+  .footer-nav a { font-size: 14px; color: var(--muted); text-decoration: none; transition: color .2s; font-weight: 600;}
+  .footer-nav a:hover { color: var(--text); }
+
+  /* ═══ RESPONSIVE ════════════════════════════════════════════════════════ */
+  @media (max-width: 1024px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    .bento-wide { grid-column: span 2; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+    .showcase-split { grid-template-columns: 1fr; gap: 64px; }
+    .showcase-phones { order: -1; }
   }
 
   @media (max-width: 768px) {
-    .web-header {
-      padding: 16px 20px;
-    }
+    .desktop-nav, .header-cta { display: none; }
+    .burger { display: flex; }
 
-    .hero-section {
-      padding: 30px 16px;
-      gap: 32px;
-    }
+    .hero-content { grid-template-columns: 1fr; gap: 64px; }
+    .hero-visual { justify-content: center; }
+    .hero-copy { text-align: center; }
+    .hero-sub { max-width: 100%; }
+    .hero-actions { justify-content: center; }
+    .trust-row { justify-content: center; }
+    .scroll-cue { display: none; }
 
-    .hero-content h1 {
-      font-size: 28px;
-    }
+    .steps-container { flex-direction: column; }
+    .step-item + .step-item { border-left: none; border-top: 1px solid rgba(255,255,255,0.06); }
+    .step-arrow { display: none; }
 
-    .search-form {
-      grid-template-columns: 1fr;
-    }
+    .showcase-split { grid-template-columns: 1fr; }
+    .showcase-copy .section-h2 { text-align: center; }
+    .showcase-check-list { align-items: center; }
+    .showcase-copy { text-align: center; }
 
-    .feature-grid {
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-
-    .search-card {
-      padding: 24px 16px;
-    }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .footer-nav { justify-content: center; }
   }
 
   @media (max-width: 480px) {
-    .hero-content h1 {
-      font-size: 24px;
-    }
-
-    .hero-description {
-      font-size: 15px;
-    }
-
-    .search-card h3 {
-      font-size: 16px;
-    }
-
-    .search-hint {
-      font-size: 12px;
-      margin-bottom: 16px;
-    }
-
-    .search-form input {
-      padding: 12px 14px;
-      font-size: 13px;
-    }
+    .bento-grid { grid-template-columns: 1fr; }
+    .bento-wide { grid-column: span 1; }
+    
+    /* Scale down phones slightly on very small screens to fit */
+    .tall-iphone { width: 260px; height: 560px; }
+    .showcase-iphone { width: 240px; height: 520px; }
+    
+    .phone-wrap { padding: 20px 0; }
+    .float-badge { display: none; }
+    .hero-h1 { letter-spacing: -1.5px; }
   }
 </style>
