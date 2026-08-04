@@ -5,7 +5,6 @@ import AlertTriangle from '../../components/icons/AlertTriangle.astro';
 import Download from '../../components/icons/Download.astro';
 import LinkIcon from '../../components/icons/Link.astro';
 import Zap from '../../components/icons/Zap.astro';
-import AntigravityBackground from '../../components/AntigravityBackground.astro';
 
 const { match_id } = Astro.params;
 
@@ -75,22 +74,26 @@ const formattedTime = match
 ---
 
 <Layout title={match ? `Partido de ${match.player_name} - ViewPadel` : 'ViewPadel'}>
-  <AntigravityBackground />
+  <div class="page-bg" aria-hidden="true">
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="grid-lines"></div>
+  </div>
   <div class="web-container">
     {/* Header */}
-    <header class="web-header">
-      <a href="/" class="logo-link">
-        <div class="logo-viewpadel"></div>
-        <div class="logo-text">
-          <h1>ViewPadel</h1>
-          <span>Cámaras Inteligentes</span>
-        </div>
-      </a>
-      {match && (
-        <div class="court-badge">
-          {match.courts?.name || 'Cancha Registrada'}
-        </div>
-      )}
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="/" class="logo-link" aria-label="ViewPadel inicio">
+          <img src="/View-padel.png" alt="ViewPadel" class="logo-img sm glow-effect" />
+          <span class="logo-text">ViewPadel</span>
+        </a>
+        {match && (
+          <div class="court-badge-header">
+            <span class="badge-dot"></span>
+            {match.courts?.name || 'Cancha Registrada'}
+          </div>
+        )}
+      </div>
     </header>
 
     {/* Main Card Wrapper */}
@@ -188,7 +191,7 @@ const formattedTime = match
             </div>
 
             <div class="action-buttons">
-              <a href={signedUrl} download class="btn btn-primary btn-lg">
+              <a href={signedUrl} download class="btn primary glass-glow btn-lg">
                 <span class="btn-icon">
                   <Download size={18} />
                 </span>
@@ -196,7 +199,7 @@ const formattedTime = match
               </a>
               <button 
                 id="share-btn" 
-                class="btn btn-secondary btn-lg"
+                class="btn ghost tech-border btn-lg"
                 onclick={`
                   if(navigator.share) {
                     navigator.share({
@@ -228,35 +231,20 @@ const formattedTime = match
   </div>
 </Layout>
 
-<script is:inline>
-  // Asynchronous SVG Logo Loader
-  function loadLogos() {
-    const containers = document.querySelectorAll('.logo-viewpadel');
-    if (containers.length === 0) return;
 
-    fetch('/logo-viewpadel.svg')
-      .then(response => {
-        if (!response.ok) throw new Error('Logo fetch failed');
-        return response.text();
-      })
-      .then(svgText => {
-        containers.forEach(container => {
-          container.innerHTML = svgText;
-        });
-      })
-      .catch(err => {
-        console.error('Error fetching optimized ViewPadel logo:', err);
-      });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadLogos);
-  } else {
-    loadLogos();
-  }
-</script>
 
 <style>
+  :root {
+    --cyan:   #00f2fe;
+    --green:  #00ff87;
+    --bg:     #0d1117;
+    --surface:#0f1923;
+    --border: rgba(255,255,255,0.07);
+    --text:   #f0f6fc;
+    --muted:  #cbd5e1;
+    --radius: 20px;
+    --font-heading: 'Outfit', system-ui, sans-serif;
+  }
   /* Base Layout and Container styling */
   .web-container {
     min-height: 100vh;
@@ -687,4 +675,41 @@ const formattedTime = match
       font-size: 22px;
     }
   }
+
+  /* ═══ NEW AMBIENT BACKGROUND ═══ */
+  .page-bg {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 0; pointer-events: none; overflow: hidden;
+    background-color: var(--bg);
+  }
+  .bg-orb {
+    position: absolute; border-radius: 50%; opacity: 0.4;
+    will-change: transform;
+  }
+  .orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, var(--cyan) 0%, transparent 70%); top: -200px; left: -100px; animation: float 15s ease-in-out infinite alternate; }
+  .orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, var(--green) 0%, transparent 70%); bottom: -100px; right: -150px; animation: float 18s ease-in-out infinite alternate-reverse; }
+  .grid-lines { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(circle at center, black 40%, transparent 100%); -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%); }
+
+  /* ═══ NEW HEADER ═══ */
+  .site-header { position: sticky; top: 0; z-index: 200; width: 100%; border-bottom: 1px solid var(--border); background: rgba(13,17,23,.5); backdrop-filter: blur(16px); }
+  .header-inner { max-width: 1200px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .logo-img { width: 36px; height: 36px; transition: transform .7s, filter .3s; }
+  .logo-img.sm { width: 28px; height: 28px; }
+  .logo-link:hover .logo-img { transform: rotate(360deg); filter: drop-shadow(0 0 12px var(--cyan)); }
+  .logo-text { font-size: 19px; font-weight: 800; color: var(--text); font-family: var(--font-heading); }
+  
+  .court-badge-header { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 99px; background: rgba(0,242,254,.08); border: 1px solid rgba(0,242,254,.3); font-size: 13px; font-weight: 700; color: var(--cyan); box-shadow: 0 0 20px rgba(0,242,254,0.1); }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); animation: blink 2s ease-in-out infinite; }
+
+  /* ═══ NEW CARDS ═══ */
+  .video-container-card { background: rgba(13,17,23,.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); backdrop-filter: blur(20px); }
+  .status-card { background: rgba(13,17,23,.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); backdrop-filter: blur(20px); padding: 48px 32px; text-align: center; max-width: 500px; width: 100%; }
+  
+  /* ═══ NEW BUTTONS ═══ */
+  .btn.primary { background: linear-gradient(135deg, var(--cyan), var(--green)); color: #000; border: none; font-weight: 700; }
+  .glass-glow:hover { box-shadow: 0 0 24px rgba(0,242,254,.4); transform: translateY(-2px); }
+  .btn.ghost { background: rgba(255,255,255,.08); color: var(--text); border: 1px solid rgba(255,255,255,.15); }
+  .btn.ghost:hover { background: rgba(255,255,255,.15); transform: translateY(-1px); }
+  .tech-border { position: relative; overflow: hidden; }
+
 </style>
