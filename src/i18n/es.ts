@@ -4,6 +4,7 @@ export const ui = {
     yourMatch: 'Tu Partido',
     pricing: 'Planes',
     contact: 'Contacto',
+    downloadApp: 'Descargar App',
     sales: 'Hablar con ventas'
   },
   hero: {

@@ -31,11 +31,18 @@ import { ui } from '../i18n/es';
         <a href="#planes">{ui.nav.pricing}</a>
         <a href="#soporte">{ui.nav.contact}</a>
       </nav>
-      <a
-        href="https://wa.me/5493564575862?text=Hola!%20Me%20interesa%20ViewPadel."
-        target="_blank" rel="noopener"
-        class="header-cta"
-      >{ui.nav.sales}</a>
+      
+      <div class="header-actions" style="display: flex; gap: 10px; align-items: center;">
+        <a href="https://github.com/facuu-aranda/PadelView-DesktopApp/releases/latest/download/ViewPadel-Setup.exe" class="header-cta download">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          {ui.nav.downloadApp}
+        </a>
+        <a
+          href="https://wa.me/5493564575862?text=Hola!%20Me%20interesa%20ViewPadel."
+          target="_blank" rel="noopener"
+          class="header-cta"
+        >{ui.nav.sales}</a>
+      </div>
       <button class="burger" id="burger" aria-label="Abrir menú">
         <span></span><span></span><span></span>
       </button>
@@ -45,6 +52,10 @@ import { ui } from '../i18n/es';
       <a href="#busca-tu-partido" class="mob-link">{ui.nav.yourMatch}</a>
       <a href="#planes" class="mob-link">{ui.nav.pricing}</a>
       <a href="#soporte" class="mob-link">{ui.nav.contact}</a>
+      <a href="https://github.com/facuu-aranda/PadelView-DesktopApp/releases/latest/download/ViewPadel-Setup.exe" class="mob-link mob-download-btn" style="margin-top: 10px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        {ui.nav.downloadApp}
+      </a>
     </nav>
   </header>
 
@@ -129,21 +140,33 @@ import { ui } from '../i18n/es';
                     <!-- Net -->
                     <rect x="135" y="30" width="10" height="120" fill="#0ea5e9" opacity="0.3"/>
                     <line x1="140" y1="30" x2="140" y2="150" stroke="#38bdf8" stroke-width="2" stroke-opacity="0.9"/>
+                    <defs>
+                      <g id="player-silhouette">
+                        <ellipse cx="0" cy="37" rx="12" ry="5" fill="#0f172a" opacity="0.8"/>
+                        <rect x="-6" y="5" width="12" height="30" rx="4" fill="currentColor" opacity="0.8"/>
+                        <circle cx="0" cy="0" r="7" fill="currentColor" opacity="0.9"/>
+                      </g>
+                    </defs>
                     <!-- Ball -->
-                    <circle cx="90" cy="75" r="8" fill="#00ff87" opacity="0.9">
-                      <animateMotion dur="3s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1; 0.4 0 0.6 1">
+                    <circle cx="0" cy="0" r="5" fill="#eab308" opacity="0.9">
+                      <animateMotion dur="4s" repeatCount="indefinite" calcMode="linear">
                         <mpath href="#ball-path"/>
                       </animateMotion>
                     </circle>
-                    <path id="ball-path" d="M90 75 Q180 40 180 80 Q180 120 90 95 Q90 75 90 75" fill="none"/>
+                    <path id="ball-path" d="M50 110 Q140 50 230 50 Q140 30 50 50 Q140 90 230 110 Q140 140 50 110" fill="none"/>
                     <!-- Players silhouettes -->
-                    <ellipse cx="80" cy="140" rx="12" ry="5" fill="#0f172a" opacity="0.8"/>
-                    <rect x="74" y="108" width="12" height="30" rx="4" fill="#0284c7" opacity="0.8"/>
-                    <circle cx="80" cy="103" r="7" fill="#0ea5e9" opacity="0.9"/>
-                    
-                    <ellipse cx="200" cy="140" rx="12" ry="5" fill="#0f172a" opacity="0.8"/>
-                    <rect x="194" y="108" width="12" height="30" rx="4" fill="#7c3aed" opacity="0.8"/>
-                    <circle cx="200" cy="103" r="7" fill="#a855f7" opacity="0.9"/>
+                    <use href="#player-silhouette" x="50" y="110" color="#0ea5e9">
+                      <animateTransform attributeName="transform" type="translate" values="0,0; 15,-10; 0,0; -5,5; 0,0" dur="4s" repeatCount="indefinite"/>
+                    </use>
+                    <use href="#player-silhouette" x="50" y="50" color="#38bdf8">
+                      <animateTransform attributeName="transform" type="translate" values="0,0; -5,5; 0,0; 15,10; 0,0" dur="4s" repeatCount="indefinite"/>
+                    </use>
+                    <use href="#player-silhouette" x="230" y="50" color="#a855f7">
+                      <animateTransform attributeName="transform" type="translate" values="0,0; -15,10; 0,0; 5,-5; 0,0" dur="4s" repeatCount="indefinite"/>
+                    </use>
+                    <use href="#player-silhouette" x="230" y="110" color="#c084fc">
+                      <animateTransform attributeName="transform" type="translate" values="0,0; 5,-5; 0,0; -15,-10; 0,0" dur="4s" repeatCount="indefinite"/>
+                    </use>
                   </svg>
                   <!-- Play button overlay -->
                   <button class="play-btn tech-play" aria-label="Reproducir">
@@ -946,6 +969,20 @@ import { ui } from '../i18n/es';
     background: rgba(0,242,254,.15);
     box-shadow: 0 0 24px rgba(0,242,254,.3);
   }
+  .header-cta.download {
+    background: rgba(16, 185, 129, .1);
+    border-color: rgba(16, 185, 129, .3);
+    color: #10b981;
+  }
+  .header-cta.download:hover {
+    background: rgba(16, 185, 129, .15);
+    box-shadow: 0 0 24px rgba(16, 185, 129, .3);
+  }
+  .mob-download-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(16, 185, 129, .1); border: 1px solid rgba(16, 185, 129, .3);
+    color: #10b981 !important; border-radius: 8px; padding: 12px;
+  }
 
   .burger {
     display: none; flex-direction: column; gap: 5px;
@@ -1696,7 +1733,7 @@ import { ui } from '../i18n/es';
   }
 
   @media (max-width: 768px) {
-    .desktop-nav, .header-cta { display: none; }
+    .desktop-nav, .header-actions { display: none; }
     .burger { display: flex; }
 
     .hero-content { grid-template-columns: 1fr; gap: 64px; }
