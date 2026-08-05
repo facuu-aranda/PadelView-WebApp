@@ -4,7 +4,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 // Server-side environment variables check
 const supabaseUrl = process.env.SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.PUBLIC_SUPABASE_ANON_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const r2AccessKeyId = process.env.R2_ACCESS_KEY_ID;
 const r2SecretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
@@ -15,11 +15,11 @@ const r2BucketName = process.env.R2_BUCKET_NAME || 'padelview-matches';
  * Supabase client instance for server-side queries.
  */
 export const getSupabase = () => {
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Supabase environment variables (SUPABASE_URL, SUPABASE_ANON_KEY) are not set.');
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Supabase environment variables (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) are not set.');
   }
   const sanitizedUrl = supabaseUrl.replace(/\/rest\/v1\/?$/, '').trim();
-  return createClient(sanitizedUrl, supabaseAnonKey, {
+  return createClient(sanitizedUrl, supabaseServiceKey, {
     auth: {
       persistSession: false
     }
@@ -37,6 +37,7 @@ export async function getSignedVideoUrl(videoKey: string, filename: string): Pro
   const s3Client = new S3Client({
     region: 'auto',
     endpoint: r2Endpoint,
+    forcePathStyle: true,
     credentials: {
       accessKeyId: r2AccessKeyId,
       secretAccessKey: r2SecretAccessKey
