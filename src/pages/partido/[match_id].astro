@@ -34,13 +34,32 @@ try {
     if (match.status === 'DONE') {
       if (!match.video_key) {
         errorMessage = 'El video fue procesado pero no se encuentra en el almacenamiento.';
+      } else if (!match.profile_id) {
+        errorMessage = 'Este partido no está asociado a ningún club.';
       } else {
-        const dateStr = new Date(match.start_time).toISOString().split('T')[0];
-        const courtName = match.courts?.name.replace(/[^a-zA-Z0-9]/g, '_') || 'cancha';
-        const filename = `PadelView_${courtName}_${dateStr}.mp4`;
-        
-        // Generate signed URL
-        signedUrl = await getSignedVideoUrl(match.video_key, filename);
+        // Fetch specific client configs to know which bucket and credentials to use
+        const { data: config, error: configErr } = await supabase
+          .from('client_configs')
+          .select('r2_bucket_name, r2_access_key_id, r2_secret_access_key, r2_endpoint')
+          .eq('profile_id', match.profile_id)
+          .single();
+
+        if (configErr || !config) {
+          console.error('Client config error:', configErr);
+          errorMessage = 'La configuración del club no está completa para reproducir este video.';
+        } else {
+          const dateStr = new Date(match.start_time).toISOString().split('T')[0];
+          const courtName = match.courts?.name.replace(/[^a-zA-Z0-9]/g, '_') || 'cancha';
+          const filename = `PadelView_${courtName}_${dateStr}.mp4`;
+          
+          // Generate signed URL dynamically using the club's specific R2 credentials
+          signedUrl = await getSignedVideoUrl(match.video_key, filename, {
+            endpoint: config.r2_endpoint,
+            accessKeyId: config.r2_access_key_id,
+            secretAccessKey: config.r2_secret_access_key,
+            bucketName: config.r2_bucket_name
+          });
+        }
       }
     } else if (match.status === 'RECORDING' || match.status === 'UPLOADING') {
       isLoadingState = true;
