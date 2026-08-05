@@ -399,7 +399,21 @@ import { ui } from '../i18n/es';
                     <line x1="100" y1="10" x2="100" y2="100" stroke="#2563eb" stroke-width="0.6" stroke-opacity="0.5"/>
                     <line x1="10" y1="55" x2="190" y2="55" stroke="#2563eb" stroke-width="0.6" stroke-opacity="0.4"/>
                     <line x1="100" y1="10" x2="100" y2="100" stroke="#60a5fa" stroke-width="1.5" stroke-opacity="0.8"/>
-                    <circle cx="60" cy="40" r="5" fill="#00ff87" opacity="0.9" style="filter: drop-shadow(0 0 4px #00ff87)"/>
+                    <defs>
+                      <g id="mini-player">
+                        <ellipse cx="0" cy="25" rx="8" ry="3" fill="#0f172a" opacity="0.8"/>
+                        <rect x="-4" y="3" width="8" height="20" rx="3" fill="currentColor" opacity="0.8"/>
+                        <circle cx="0" cy="0" r="5" fill="currentColor" opacity="0.9"/>
+                      </g>
+                    </defs>
+                    <circle cx="60" cy="40" r="4" fill="#eab308" opacity="0.9" style="filter: drop-shadow(0 0 4px #eab308)"/>
+                    
+                    <!-- Static Players -->
+                    <use href="#mini-player" x="40" y="70" color="#0ea5e9"/>
+                    <use href="#mini-player" x="40" y="30" color="#38bdf8"/>
+                    <use href="#mini-player" x="160" y="70" color="#a855f7"/>
+                    <use href="#mini-player" x="160" y="30" color="#c084fc"/>
+
                     <circle cx="100" cy="55" r="30" fill="white" fill-opacity="0.06" stroke="white" stroke-opacity="0.1"/>
                     <path d="M94 48 L94 62 L108 55 Z" fill="white" opacity="0.9"/>
                   </svg>
@@ -565,7 +579,6 @@ import { ui } from '../i18n/es';
         target="_blank" rel="noopener"
         class="btn primary large glass-glow"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg>
         {ui.cta.btn}
       </a>
     </div>
