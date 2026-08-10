@@ -16,6 +16,7 @@
     "@aws-sdk/client-s3": "^3.1085.0",
     "@aws-sdk/s3-request-presigner": "^3.1085.0",
     "@supabase/supabase-js": "^2.110.2",
+    "@vercel/analytics": "^2.0.1",
     "astro": "^7.0.7"
   }
 }
