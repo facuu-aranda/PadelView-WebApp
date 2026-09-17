@@ -21,7 +21,7 @@ try {
   const supabase = getSupabase();
   const { data, error } = await supabase
     .from('matches')
-    .select('*, courts(name)')
+    .select('*')
     .eq('id', match_id)
     .single();
 
@@ -49,7 +49,7 @@ try {
           errorMessage = 'La configuración del club no está completa para reproducir este video.';
         } else {
           const dateStr = new Date(match.start_time).toISOString().split('T')[0];
-          const courtName = match.courts?.name.replace(/[^a-zA-Z0-9]/g, '_') || 'cancha';
+          const courtName = match.court_name?.replace(/[^a-zA-Z0-9]/g, '_') || 'cancha';
           const filename = `PadelView_${courtName}_${dateStr}.mp4`;
           
           // Generate signed URL dynamically using the club's specific R2 credentials
@@ -109,7 +109,7 @@ const formattedTime = match
         {match && (
           <div class="court-badge-header">
             <span class="badge-dot"></span>
-            {match.courts?.name || 'Cancha Registrada'}
+            {match.court_name || 'Cancha Registrada'}
           </div>
         )}
       </div>
@@ -206,7 +206,7 @@ const formattedTime = match
             <div class="match-meta">
               <span class="date">{formattedDate}</span>
               <h2>Partido de {match.player_name}</h2>
-              <p class="time-court">{formattedTime} | {match.courts?.name}</p>
+              <p class="time-court">{formattedTime} | {match.court_name || 'Cancha Registrada'}</p>
             </div>
 
             <div class="action-buttons">
