@@ -7,6 +7,7 @@ import LinkIcon from '../../components/icons/Link.astro';
 import Zap from '../../components/icons/Zap.astro';
 
 const { match_id } = Astro.params;
+const appTimeZone = process.env.PUBLIC_TIME_ZONE || 'America/Argentina/Buenos_Aires';
 
 let match: any = null;
 let signedUrl: string | null = null;
@@ -77,17 +78,20 @@ const formattedDate = match
       weekday: 'long',
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: appTimeZone
     })
   : '';
 
 const formattedTime = match
   ? `${new Date(match.start_time).toLocaleTimeString('es-AR', {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      timeZone: appTimeZone
     })} a ${new Date(match.end_time).toLocaleTimeString('es-AR', {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      timeZone: appTimeZone
     })} hs`
   : '';
 ---
